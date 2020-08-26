@@ -33,8 +33,8 @@ class SourceFile:
     
     def __init__(self, all_content, comments, class_names, attributes,
                  method_names, variables, file_name, package_name):
-        self.all_content = all_content
-        self.comments = comments
+        self.all_content = all_content # chứa tất cả nội dung code
+        self.comments = comments # comments
         self.class_names = class_names
         self.attributes = attributes
         self.method_names = method_names
