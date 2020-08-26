@@ -1,3 +1,6 @@
+# import nltk
+# nltk.download()
+
 import preprocessing
 import vsm_similarity
 import token_matching
@@ -6,8 +9,10 @@ import semantic_similarity
 import fixed_bug_reports
 import evaluation
 
+# preprocessing
 print('Parsing & Preprocessing...')
 preprocessing.main()
+
 
 print('Token Matching...')
 token_matching.main()

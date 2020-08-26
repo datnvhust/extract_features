@@ -28,8 +28,39 @@ zxing = Dataset(
     _DATASET_ROOT / 'ZXing/ZXingBugRepository.xml'
 )
 
+asp = Dataset(
+    'zxing',
+    _DATASET_ROOT / 'sourceFile_aspectj',
+    _DATASET_ROOT / 'sourceFile_aspectj/org.aspectj',
+    _DATASET_ROOT / 'sourceFile_aspectj/AspectJ.xml'
+)
+ecl = Dataset(
+    'zxing',
+    _DATASET_ROOT / 'sourceFile_eclipseUI',
+    _DATASET_ROOT / 'sourceFile_eclipseUI/eclipse.platform.ui',
+    _DATASET_ROOT / 'sourceFile_eclipseUI/Eclipse_Platform_UI.xml'
+)
+jdt = Dataset(
+    'zxing',
+    _DATASET_ROOT / 'sourceFile_jdt',
+    _DATASET_ROOT / 'sourceFile_jdt/eclipse.jdt.ui',
+    _DATASET_ROOT / 'sourceFile_jdt/JDT.xml'
+)
+swt_ = Dataset(
+    'zxing',
+    _DATASET_ROOT / 'sourceFile_swt',
+    _DATASET_ROOT / 'sourceFile_swt/eclipse.platform.swt',
+    _DATASET_ROOT / 'sourceFile_swt/SWT.xml'
+)
+tom = Dataset(
+    'zxing',
+    _DATASET_ROOT / 'sourceFile_tomcat',
+    _DATASET_ROOT / 'sourceFile_tomcat/tomcat',
+    _DATASET_ROOT / 'sourceFile_tomcat/Tomcat.xml'
+)
+
 ### Current dataset in use. (change this name to change the dataset)
-DATASET = zxing
+DATASET = aspectj
 
 if __name__ == '__main__':
     print(DATASET.name, DATASET.root, DATASET.src, DATASET.bug_repo)

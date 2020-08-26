@@ -386,15 +386,23 @@ class SrcPreprocessing:
 def main():
     
     parser = Parser(DATASET)
-    
+    # print(parser)
+    # print(parser.src_parser())
     src_prep = SrcPreprocessing(parser.src_parser())
     src_prep.preprocess()
+    # print(src_prep)
     with open(DATASET.root / 'preprocessed_src.pickle', 'wb') as file:
+        # for src in src_prep.src_files.values():
+        #     print(src.all_content)
+        # print(file)
         pickle.dump(src_prep.src_files, file, protocol=pickle.HIGHEST_PROTOCOL)
     
     report_prep = ReportPreprocessing(parser.report_parser())
     report_prep.preprocess()
     with open(DATASET.root / 'preprocessed_reports.pickle', 'wb') as file:
+        # print(report_prep.bug_reports)
+        # for bug in report_prep.bug_reports.values():
+            # print(bug.summary)
         pickle.dump(report_prep.bug_reports, file, protocol=pickle.HIGHEST_PROTOCOL)
 
     

@@ -64,9 +64,11 @@ def main():
         src_files = pickle.load(file)
     with open(DATASET.root / 'preprocessed_reports.pickle', 'rb') as file:
         bug_reports = pickle.load(file)
-        
-    scores = check_matchings(src_files, bug_reports)
     
+    # print(bug_reports)
+    scores = check_matchings(src_files, bug_reports)
+    print(len(scores))
+    print(len(scores[0]))
     # Saving scores in a json file
     with open(DATASET.root / 'token_matching.json', 'w') as file:
         json.dump(scores, file)
