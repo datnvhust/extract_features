@@ -27,15 +27,16 @@ class BugReport:
 class SourceFile:
     """Class representing each source file"""
     
-    __slots__ = ['all_content', 'comments', 'class_names', 'attributes',
+    __slots__ = ['all_content', 'comments', 'class_names', 'class_names_1', 'attributes',
                  'method_names', 'variables', 'file_name', 'pos_tagged_comments',
                  'exact_file_name', 'package_name']
     
-    def __init__(self, all_content, comments, class_names, attributes,
+    def __init__(self, all_content, comments, class_names, class_names_1, attributes,
                  method_names, variables, file_name, package_name):
         self.all_content = all_content # chứa tất cả nội dung code
         self.comments = comments # comments
         self.class_names = class_names
+        self.class_names_1 = class_names_1
         self.attributes = attributes
         self.method_names = method_names
         self.variables = variables
@@ -96,6 +97,7 @@ class Parser:
             # Placeholder for different parts of a source file
             comments = ''
             class_names = []
+            class_names_1 = []
             attributes = []
             method_names = []
             variables = []
@@ -138,6 +140,7 @@ class Parser:
                     comments += token[1]
                 elif token[0] is Token.Name.Class:
                     class_names.append(token[1])
+                    class_names_1.append(token[1])
                 elif token[0] is Token.Name.Function:
                     method_names.append(token[1])
             
@@ -149,7 +152,7 @@ class Parser:
             
             if self.name == 'aspectj':
                 src_files[os.path.relpath(src_file, start=self.src)] = SourceFile(
-                    src, comments, class_names, attributes,
+                    src, comments, class_names, class_names_1, attributes,
                     method_names, variables,
                     [os.path.basename(src_file).split('.')[0]],
                     package_name
@@ -163,7 +166,7 @@ class Parser:
                     src_id = os.path.basename(src_file)
                         
                 src_files[src_id] = SourceFile(
-                    src, comments, class_names, attributes,
+                    src, comments, class_names, class_names_1, attributes,
                     method_names, variables,
                     [os.path.basename(src_file).split('.')[0]],
                     package_name

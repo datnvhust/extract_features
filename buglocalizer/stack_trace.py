@@ -50,7 +50,7 @@ def get_traces_score(src_files, bug_reports):
     
     
 def main():
-    
+    #custom max rank = 10 and add set C
     with open(DATASET.root / 'preprocessed_src.pickle', 'rb') as file:
         src_files = pickle.load(file)
     with open(DATASET.root / 'preprocessed_reports.pickle', 'rb') as file:

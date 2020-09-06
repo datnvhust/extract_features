@@ -13,12 +13,12 @@ def calculate_similarity(src_files, bug_reports):
     
     # Loading word vectors
     nlp = en_vectors_web_lg.load()
-    
     src_docs = [nlp(' '.join(src.file_name['unstemmed'] + src.class_names['unstemmed']
                              + src.attributes['unstemmed'] + src.comments['unstemmed']
                              + src.method_names['unstemmed']))
                 for src in src_files.values()]
-    
+    # print(src_docs[0])
+    # src_docs là mảng chứa tất cả files, 1 phần tử đại diện cho 1 file được gộp bởi file_name, class_name,...
     min_max_scaler = MinMaxScaler()
     
     all_simis = []

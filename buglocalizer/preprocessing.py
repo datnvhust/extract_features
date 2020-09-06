@@ -242,6 +242,7 @@ class SrcPreprocessing:
         for src in self.src_files.values():
             src.all_content = self._split_camelcase(src.all_content)
             src.comments = self._split_camelcase(src.comments)
+            src.class_names_1 = self._split_camelcase(src.class_names)
             src.class_names = self._split_camelcase(src.class_names)
             src.attributes = self._split_camelcase(src.attributes)
             src.method_names = self._split_camelcase(src.method_names)
