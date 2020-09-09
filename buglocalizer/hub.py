@@ -1,5 +1,3 @@
-import en_vectors_web_lg
-
 import pickle
 import json
 

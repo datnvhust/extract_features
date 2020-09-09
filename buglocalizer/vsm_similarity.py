@@ -33,9 +33,11 @@ class Similarity:
         src_len_score = 1 / (1 + np.exp(-12 * normalized_src_len))
         
         simis = []
+        # print(src_tfidf)
         for report in reports_tfidf:
+            print(report)
             s = cosine_similarity(src_tfidf, report)
-            
+            # print(s)
             # revised VSM score calculation
             rvsm_score = s * src_len_score
             
@@ -59,6 +61,7 @@ class Similarity:
         src_tfidf = tfidf.fit_transform(self.src_strings)
         
         reports_tfidf = tfidf.transform(reports_strings)
+        # print(reports_tfidf[2])
         
         simis = self.calculate_similarity(src_tfidf, reports_tfidf)
         return simis

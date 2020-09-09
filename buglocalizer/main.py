@@ -23,8 +23,8 @@ import evaluation
 # print('Token Matching...')
 # token_matching.main()
 
-# print('VSM Similarity...')
-# vsm_similarity.main()
+print('VSM Similarity...')
+vsm_similarity.main()
 
 # feature 2
 # print('Stack Trace...')

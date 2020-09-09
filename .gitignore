@@ -10,7 +10,6 @@
 data/
 data1/
 data-template/
-*.pickle
 *.json
 *.txt
 *.csv
