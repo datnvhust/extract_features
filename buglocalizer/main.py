@@ -5,6 +5,7 @@ import preprocessing
 import vsm_similarity
 import token_matching
 import stack_trace
+import version_history
 import semantic_similarity
 import text_structure
 import hub
@@ -23,8 +24,8 @@ import evaluation
 # print('Token Matching...')
 # token_matching.main()
 
-print('VSM Similarity...')
-vsm_similarity.main()
+# print('VSM Similarity...')
+# vsm_similarity.main()
 
 # feature 2
 # print('Stack Trace...')
@@ -33,9 +34,11 @@ vsm_similarity.main()
 # print('Semantic Similarity...')
 # semantic_similarity.main()
 
-print('Text Structure...')
-text_structure.main()
+# print('Text Structure...')
+# text_structure.main()
 
+print('Version history...')
+version_history.main()
 
 # print('Hub...')
 # hub.main()

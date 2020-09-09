@@ -12,13 +12,15 @@ from pygments.token import Token
 class BugReport:
     """Class representing each bug report"""
 
-    __slots__ = ['summary', 'description', 'fixed_files',
+    __slots__ = ['summary', 'description', 'fixed_files', 'opendate', 'fixdate',
                  'pos_tagged_summary', 'pos_tagged_description', 'stack_traces']
 
-    def __init__(self, summary, description, fixed_files):
+    def __init__(self, summary, description, fixed_files, opendate, fixdate,):
         self.summary = summary
         self.description = description
         self.fixed_files = fixed_files
+        self.opendate = opendate
+        self.fixdate = fixdate
         self.pos_tagged_summary = None
         self.pos_tagged_description = None
         self.stack_traces = None
@@ -77,7 +79,9 @@ class Parser:
                 bug_report['buginformation']['description']
                 if bug_report['buginformation']['description'] else '',
                 [os.path.normpath(path)
-                 for path in bug_report['fixedFiles']['file']]
+                 for path in bug_report['fixedFiles']['file']],
+                bug_report['@opendate'],
+                bug_report['@fixdate'],
             )
 
         return bug_reports
