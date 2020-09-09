@@ -213,26 +213,27 @@ class SrcPreprocessing:
     def _split_camelcase(self, tokens):
     
         # Copy tokens
-        returning_tokens = tokens[:]
+        # returning_tokens = tokens[:]
+        returning_tokens = []
         
         for token in tokens:
             split_tokens = re.split(fr'[{string.punctuation}]+', token)
-            
             # If token is split into some other tokens
             if len(split_tokens) > 1:
-                returning_tokens.remove(token)
+                # returning_tokens.remove(token)
                 # Camel case detection for new tokens
                 for st in split_tokens:
                     camel_split = inflection.underscore(st).split('_')
-                    if len(camel_split) > 1:
-                        returning_tokens.append(st)
-                        returning_tokens += camel_split
-                    else:
-                        returning_tokens.append(st)
+                    # if len(camel_split) > 1:
+                    returning_tokens.append(st)
+                    returning_tokens += camel_split
+                    # else:
+                    #     returning_tokens.append(st)
             else:
                 camel_split = inflection.underscore(token).split('_')
-                if len(camel_split) > 1:
-                    returning_tokens += camel_split
+                # if len(camel_split) > 1:
+                # returning_tokens.append(st)
+                returning_tokens += camel_split
     
         return returning_tokens
     
@@ -240,13 +241,16 @@ class SrcPreprocessing:
         """Split CamelCase identifiers"""
         
         for src in self.src_files.values():
+            # print(src.method_names_hub)
             src.all_content = self._split_camelcase(src.all_content)
             src.comments = self._split_camelcase(src.comments)
-            src.class_names_1 = self._split_camelcase(src.class_names)
+            # src.class_names_hub = self._split_camelcase(src.class_names)
             src.class_names = self._split_camelcase(src.class_names)
             src.attributes = self._split_camelcase(src.attributes)
             src.method_names = self._split_camelcase(src.method_names)
+            # src.method_names_hub = self._split_camelcase(src.method_names_hub)
             src.variables = self._split_camelcase(src.variables)
+            # src.variables_hub = self._split_camelcase(src.variables)
             src.file_name = self._split_camelcase(src.file_name)
             src.pos_tagged_comments = self._split_camelcase(src.pos_tagged_comments)
             
@@ -394,8 +398,7 @@ def main():
     # print(src_prep)
     with open(DATASET.root / 'preprocessed_src.pickle', 'wb') as file:
         # for src in src_prep.src_files.values():
-        #     print(src.all_content)
-        # print(file)
+        #     print(src.method_names_hub)
         pickle.dump(src_prep.src_files, file, protocol=pickle.HIGHEST_PROTOCOL)
     
     report_prep = ReportPreprocessing(parser.report_parser())

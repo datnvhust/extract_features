@@ -33,12 +33,12 @@ import evaluation
 # print('Semantic Similarity...')
 # semantic_similarity.main()
 
-# print('Text Structure...')
-# text_structure.main()
+print('Text Structure...')
+text_structure.main()
 
 
-print('Hub...')
-hub.main()
+# print('Hub...')
+# hub.main()
 
 # print('Fixed Bug Reports...')
 # fixed_bug_reports.main()

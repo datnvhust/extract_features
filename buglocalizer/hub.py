@@ -5,7 +5,8 @@ import json
 
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
-
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 from datasets import DATASET
 
 import networkx as nx 
@@ -25,22 +26,29 @@ def hub(src_files, bug_reports):
         # comments = nlp(' '.join(src.comments['unstemmed']))
         # method_names = nlp(' '.join(src.method_names['unstemmed']))
 
-        # print("abc", src.class_names_1)
-        # print(s)
+        print(src1.exact_file_name)
+        # print(src1.class_names_hub)
+        print(src1.method_names)
+        print(src1.method_names_hub)
+        print(src1.variables_hub)
+        print(src1.variables)
+        # print(src1.attributes)
+        # print(s)/
 
         cont = False
-        for c in src1.class_names_1:
+        ## inner class
+        for c in src1.class_names_hub:
             if cont == True:
                 break
             for s2, src2 in enumerate(src_files.values(), 1):
                 if s1 == s2:
                     break
-                if search(src2.class_names_1, c) == True:
+                if search(src2.class_names_hub, c) == True:
                     results.append((s1, s2))
                     cont == True
                     break
         
-    print(results)
+    # print(results)
     G = nx.DiGraph() 
     G.add_edges_from(results)
     nx.draw_networkx(G, with_labels = True) 
@@ -48,8 +56,8 @@ def hub(src_files, bug_reports):
     # The in-built hits function returns two dictionaries keyed by nodes 
     # containing hub scores and authority scores respectively. 
     
-    print("Hub Scores: ", hubs) 
-    print("Authority Scores: ", authorities) 
+    # print("Hub Scores: ", hubs) 
+    # print("Authority Scores: ", authorities) 
     return hubs
 
 

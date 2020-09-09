@@ -5,7 +5,8 @@ import json
 
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
-
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 from datasets import DATASET
 
 
@@ -27,8 +28,11 @@ def calculate_similarity(src_files, bug_reports):
         # report_doc = nlp(' '.join(report.summary['unstemmed']
         #                           + report.pos_tagged_description['unstemmed']))
         scores = []
-        # print(report.summary['unstemmed'])
+        tfidf = TfidfVectorizer(sublinear_tf=True, smooth_idf=False)
+        print(report.summary['unstemmed'])
         summary = nlp(' '.join(report.summary['unstemmed']))
+        print(summary)
+        # summary = tfidf.fit_transform(report.summary['unstemmed'])
         # print(summary)
         description = nlp(' '.join(report.description['unstemmed']))
         # print(report.pos_tagged_summary['unstemmed'])
@@ -39,7 +43,8 @@ def calculate_similarity(src_files, bug_reports):
             comments = nlp(' '.join(src.comments['unstemmed']))
             method_names = nlp(' '.join(src.method_names['unstemmed']))
 
-            simi = (summary.similarity(class_names)
+            simi = (
+                    summary.similarity(class_names)
                     + summary.similarity(attributes)
                     + summary.similarity(comments)
                     + summary.similarity(method_names)
