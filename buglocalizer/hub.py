@@ -36,7 +36,7 @@ def hub(src_files, bug_reports):
         # print(src1.method_names)
         # print(src1.method_names_hub)
         # print(src1.variables_hub)
-        # print(src1.variables)
+        print(src1.class_imports)
         # print(src1.attributes)
         # print(s)/
 
