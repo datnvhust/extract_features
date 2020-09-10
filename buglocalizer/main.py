@@ -37,11 +37,11 @@ import evaluation
 # print('Text Structure...')
 # text_structure.main()
 
-print('Version history...')
-version_history.main()
+# print('Version history...')
+# version_history.main()
 
-# print('Hub...')
-# hub.main()
+print('Hub...')
+hub.main()
 
 # print('Fixed Bug Reports...')
 # fixed_bug_reports.main()
