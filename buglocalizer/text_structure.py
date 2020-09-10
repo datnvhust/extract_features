@@ -1,9 +1,11 @@
-import en_vectors_web_lg
 
 import pickle
 import json
 
 import numpy as np
+"""
+import en_vectors_web_lg
+
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
@@ -57,18 +59,38 @@ def calculate_similarity(src_files, bug_reports):
         all_simis.append(scores)
         # print(scores)
     return all_simis
-    
+    """
+class TFIDFVectorizer():
+    def __init__(self, k=1.5, b=0.75):
+        self.k = k
+        self.b = b
+
+    def tf(self,word,doc, doc_list):
+        all_num=sum([doc[key] for key in doc])
+        avg = 0
+        for vb in doc_list:
+            avg += sum([vb[key] for key in vb])
+        avg = avg/len(doc_list)
+        return (doc[word]*(self.k + 1))/(doc[word] + self.k*(1 - self.b + self.b*all_num/avg))
+
+    def idf(self, word,doc_list):
+        all_num=len(doc_list)
+        word_count=0
+        for doc in doc_list:
+            if word in doc:
+                word_count+=1
+        return log((all_num+1)/(word_count+0.5))
+
+    def tfidf(self, word,doc,doc_list):
+        score = self.tf(word,doc, doc_list)*self.idf(word,doc_list)
+        return score
 def main():
     
     with open(DATASET.root / 'preprocessed_src.pickle', 'rb') as file:
         src_files = pickle.load(file)
     with open(DATASET.root / 'preprocessed_reports.pickle', 'rb') as file:
         bug_reports = pickle.load(file)
-        
-    all_simis = calculate_similarity(src_files, bug_reports)
-
-    with open(DATASET.root / 'text_structure.json', 'w') as file:
-        json.dump(all_simis, file)
+    print(src_files)
 
 
 if __name__ == '__main__':
