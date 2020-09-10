@@ -6,6 +6,7 @@ import vsm_similarity
 import token_matching
 import stack_trace
 import version_history
+import similar_report
 import semantic_similarity
 import text_structure
 import hub
@@ -40,8 +41,11 @@ import evaluation
 # print('Version history...')
 # version_history.main()
 
-print('Hub...')
-hub.main()
+print('Similar Report...')
+similar_report.main()
+
+# print('Hub...')
+# hub.main()
 
 # print('Fixed Bug Reports...')
 # fixed_bug_reports.main()

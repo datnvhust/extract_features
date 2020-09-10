@@ -149,13 +149,13 @@ class Parser:
 
             # Lexically tokenize the source file
             lexed_src = pygments.lex(src, java_lexer)
-            src__ = []
-            for token in lexed_src:
-                src__.append(token)
-            for i, token in enumerate(src__):
-                if token[0] is Token.Name and src__[i + 1][0] is Token.Text and src__[i + 2][0] is Token.Name:
-                    # print(token[1])
-                    class_imports.append(token[1])
+            # src__ = []
+            # for token in lexed_src:
+            #     src__.append(token)
+            # for i, token in enumerate(src__):
+            #     if token[0] is Token.Name and src__[i + 1][0] is Token.Text and src__[i + 2][0] is Token.Name:
+            #         # print(token[1])
+            #         class_imports.append(token[1])
             for i, token in enumerate(lexed_src):
                 if token[0] in Token.Comment:
                     if ind and i == 0 and token[0] is Token.Comment.Multiline:

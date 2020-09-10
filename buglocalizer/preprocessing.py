@@ -243,6 +243,7 @@ class SrcPreprocessing:
         
         for src in self.src_files.values():
             # print(src.method_names_hub)
+            src.file_name[0] = src.file_name[0].split(' ')[1]
             src.all_content = self._split_camelcase(src.all_content)
             src.comments = self._split_camelcase(src.comments)
             # src.class_names_hub = self._split_camelcase(src.class_names)
