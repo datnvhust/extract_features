@@ -23,12 +23,15 @@ def version_history(src_files, bug_reports):
 
         # tìm các commit trong vòng 15 ngày (sẽ chứa các file)
         scores = []
-        input_bug_report = datetime.datetime.strptime(
-            report.opendate, '%Y-%m-%d %H:%M:%S').timestamp()
+        # input_bug_report = datetime.datetime.strptime(
+            # report.opendate, '%Y-%m-%d %H:%M:%S').timestamp()
+        input_bug_report = int(report.opendate)
+        # print(input_bug_report)
         x = []
         for rep in bug_reports.values():
-            commit_date = datetime.datetime.strptime(
-                rep.fixdate, '%Y-%m-%d %H:%M:%S').timestamp()
+            # commit_date = datetime.datetime.strptime(
+            #     rep.fixdate, '%Y-%m-%d %H:%M:%S').timestamp()
+            commit_date = int(rep.fixdate)
             if (input_bug_report > commit_date) and (input_bug_report - commit_date < 1 * 60 * 60 * 24 * 15):
                 # print((input_bug_report - commit_date)/1 / 60 / 60 / 24)
                 # x = [r.split('.')[-2]
@@ -37,7 +40,6 @@ def version_history(src_files, bug_reports):
                 # rep.fixed_files = [r.split('.')[-2]
                 #              for r in rep.fixed_files]
                 x.append(rep)
-
         # duyệt từng file
         for src in src_files.values():
             if(len(x) != 0):
@@ -50,11 +52,16 @@ def version_history(src_files, bug_reports):
                     files = [r.split('.')[-2]
                              for r in relevant_commit.fixed_files]
                     for f in files:
-                        # print(src.exact_file_name, f)
-                        if(src.exact_file_name == f):
+                        f = f.split('\\')[-1]
+                        exact_file_name = src.exact_file_name.split(' ')[-1]
+                        # print(exact_file_name, f)
+                        # if(src.exact_file_name == f):
+                        if(exact_file_name == f):
                             k = 15
-                            tc = (input_bug_report - datetime.datetime.strptime(
-                                relevant_commit.fixdate, '%Y-%m-%d %H:%M:%S').timestamp()) / 60/60/24
+                            # tc = (input_bug_report - datetime.datetime.strptime(
+                            #     relevant_commit.fixdate, '%Y-%m-%d %H:%M:%S').timestamp()) / 60/60/24
+                            tc = (input_bug_report - int(relevant_commit.fixdate)) / 60 / 60 / 24
+                            # print(tc)
                             # print(f)
                             # print(datetime.datetime.strptime(
                             #     relevant_commit.fixdate, '%Y-%m-%d %H:%M:%S').timestamp())
@@ -72,7 +79,7 @@ def version_history(src_files, bug_reports):
                 scores.append(0)
         version_history_scores.append(scores)
         # all_simis.append(scores)
-    print(version_history_scores)
+    return version_history_scores
 
 
 def main():
@@ -82,10 +89,11 @@ def main():
     with open(DATASET.root / 'preprocessed_reports.pickle', 'rb') as file:
         bug_reports = pickle.load(file)
 
-    version_history(src_files, bug_reports)
-
-    # with open(DATASET.root / 'stack_trace.json', 'w') as file:
-    #     json.dump(all_scores, file)
+    version_history_scores = version_history(src_files, bug_reports)
+    print(len(version_history_scores))
+    print(len(version_history_scores[0]))
+    with open(DATASET.root / 'version_history.json', 'w') as file:
+        json.dump(version_history_scores, file)
 
 
 if __name__ == '__main__':
