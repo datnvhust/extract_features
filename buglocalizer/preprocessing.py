@@ -62,26 +62,27 @@ class ReportPreprocessing:
     def _split_camelcase(self, tokens):
     
         # Copy tokens
-        returning_tokens = tokens[:]
+        # returning_tokens = tokens[:]
+        returning_tokens = []
         
         for token in tokens:
             split_tokens = re.split(fr'[{string.punctuation}]+', token)
-            
             # If token is split into some other tokens
             if len(split_tokens) > 1:
-                returning_tokens.remove(token)
+                # returning_tokens.remove(token)
                 # Camel case detection for new tokens
                 for st in split_tokens:
                     camel_split = inflection.underscore(st).split('_')
-                    if len(camel_split) > 1:
-                        returning_tokens.append(st)
-                        returning_tokens += camel_split
-                    else:
-                        returning_tokens.append(st)
+                    # if len(camel_split) > 1:
+                    returning_tokens.append(st)
+                    returning_tokens += camel_split
+                    # else:
+                    #     returning_tokens.append(st)
             else:
                 camel_split = inflection.underscore(token).split('_')
-                if len(camel_split) > 1:
-                    returning_tokens += camel_split
+                # if len(camel_split) > 1:
+                # returning_tokens.append(st)
+                returning_tokens += camel_split
     
         return returning_tokens
     
