@@ -11,6 +11,5 @@ venv/
 data/
 data1/
 data-template/
-*.json
 *.txt
 *.csv

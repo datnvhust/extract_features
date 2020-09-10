@@ -12,13 +12,15 @@ from pygments.token import Token
 class BugReport:
     """Class representing each bug report"""
 
-    __slots__ = ['summary', 'description', 'fixed_files',
+    __slots__ = ['summary', 'description', 'fixed_files', 'opendate', 'fixdate',
                  'pos_tagged_summary', 'pos_tagged_description', 'stack_traces']
 
-    def __init__(self, summary, description, fixed_files):
+    def __init__(self, summary, description, fixed_files, opendate, fixdate,):
         self.summary = summary
         self.description = description
         self.fixed_files = fixed_files
+        self.opendate = opendate
+        self.fixdate = fixdate
         self.pos_tagged_summary = None
         self.pos_tagged_description = None
         self.stack_traces = None
@@ -29,10 +31,10 @@ class SourceFile:
 
     __slots__ = ['all_content', 'comments', 'comments_hub', 'class_names', 'class_names_hub', 'attributes', 'attributes_hub',
                  'method_names', 'method_names_hub', 'variables', 'variables_hub', 'file_name', 'pos_tagged_comments',
-                 'exact_file_name', 'package_name']
+                 'exact_file_name', 'package_name', 'class_imports']
 
     def __init__(self, all_content, comments, comments_hub, class_names, class_names_hub, attributes, attributes_hub,
-                 method_names, method_names_hub,variables, variables_hub, file_name, package_name):
+                 method_names, method_names_hub,variables, variables_hub, file_name, package_name, class_imports):
         self.all_content = all_content  # chứa tất cả nội dung code
         self.comments = comments  # comments
         self.comments_hub = comments_hub  # comments
@@ -48,7 +50,7 @@ class SourceFile:
         self.exact_file_name = file_name[0]
         self.package_name = package_name
         self.pos_tagged_comments = None
-
+        self.class_imports = class_imports
 
 class Parser:
     """Class containing different parsers"""
@@ -77,7 +79,9 @@ class Parser:
                 bug_report['buginformation']['description']
                 if bug_report['buginformation']['description'] else '',
                 [os.path.normpath(path)
-                 for path in bug_report['fixedFiles']['file']]
+                 for path in bug_report['fixedFiles']['file']],
+                bug_report['@opendate'],
+                bug_report['@fixdate'],
             )
 
         return bug_reports
@@ -111,7 +115,8 @@ class Parser:
             method_names_hub = []
             variables = []
             variables_hub = []
-
+            class_imports = []
+            # print([os.path.basename(src_file).split('.')[0]])
             # Source parsing
             parse_tree = None
             try:
@@ -144,7 +149,13 @@ class Parser:
 
             # Lexically tokenize the source file
             lexed_src = pygments.lex(src, java_lexer)
-
+            src__ = []
+            for token in lexed_src:
+                src__.append(token)
+            for i, token in enumerate(src__):
+                if token[0] is Token.Name and src__[i + 1][0] is Token.Text and src__[i + 2][0] is Token.Name:
+                    # print(token[1])
+                    class_imports.append(token[1])
             for i, token in enumerate(lexed_src):
                 if token[0] in Token.Comment:
                     if ind and i == 0 and token[0] is Token.Comment.Multiline:
@@ -170,7 +181,7 @@ class Parser:
                     src, comments, comments_hub, class_names, class_names_hub, attributes, attributes_hub,
                     method_names, method_names_hub, variables, variables_hub,
                     [os.path.basename(src_file).split('.')[0]],
-                    package_name
+                    package_name, class_imports
                 )
             else:
                 # If source file has package declaration
@@ -184,7 +195,7 @@ class Parser:
                     src, comments, comments_hub, class_names, class_names_hub, attributes, attributes_hub,
                     method_names, method_names_hub, variables, variables_hub,
                     [os.path.basename(src_file).split('.')[0]],
-                    package_name
+                    package_name, class_imports
                 )
         return src_files
 
