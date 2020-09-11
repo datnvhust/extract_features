@@ -127,7 +127,6 @@ class TFIDFVectorizer():
             docs_com.append(d4)
             # docs.append(doc)
             # docs.append(doc)
-
         x_tfidf = []
         for doc in docs_summary:
             for word in doc:
@@ -139,7 +138,7 @@ class TFIDFVectorizer():
                 else:
                     row.append(0)
             x_tfidf.append(row)
-
+        print("x_tfidf")
         y_tfidf = []
         for doc in docs_desc:
             for word in doc:
@@ -151,6 +150,7 @@ class TFIDFVectorizer():
                 else:
                     row.append(0)
             y_tfidf.append(row)
+        print("y_tfidf")
 
         s1 = []
         for doc in docs_class_name:
@@ -163,7 +163,7 @@ class TFIDFVectorizer():
                 else:
                     row.append(0)
             s1.append(row)
-
+        print("s1")
         s2 = []
         for doc in docs_atr:
             for word in doc:
@@ -175,6 +175,7 @@ class TFIDFVectorizer():
                 else:
                     row.append(0)
             s2.append(row)
+        print("s2")
 
         s3 = []
         for doc in docs_method:

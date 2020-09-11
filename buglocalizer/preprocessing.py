@@ -395,7 +395,7 @@ def main():
     parser = Parser(DATASET)
     # print(parser)
     # print(parser.src_parser())
-    src_prep = SrcPreprocessing(parser.src_parser())
+    src_prep = SrcPreprocessing(parser.src_parser_bug())
     src_prep.preprocess()
     # print(src_prep)
     with open(DATASET.root / 'preprocessed_src.pickle', 'wb') as file:
@@ -411,6 +411,5 @@ def main():
             # print(bug.summary)
         pickle.dump(report_prep.bug_reports, file, protocol=pickle.HIGHEST_PROTOCOL)
 
-    
 if __name__ == '__main__':
     main()

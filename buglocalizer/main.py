@@ -35,14 +35,14 @@ import evaluation
 # print('Semantic Similarity...')
 # semantic_similarity.main()
 
-print('Text Structure...')
-text_structure.main()
+# print('Text Structure...')
+# text_structure.main()
 
 # print('Version history...')
 # version_history.main()
 
-# print('Similar Report...')
-# similar_report.main()
+print('Similar Report...')
+similar_report.main()
 
 # print('Hub...')
 # hub.main()

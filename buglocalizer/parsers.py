@@ -12,15 +12,17 @@ from pygments.token import Token
 class BugReport:
     """Class representing each bug report"""
 
-    __slots__ = ['summary', 'description', 'fixed_files', 'opendate', 'fixdate',
+    __slots__ = ['summary', 'description', 'fixed_files', 'opendate', 'fixdate', 'commit', 'status',
                  'pos_tagged_summary', 'pos_tagged_description', 'stack_traces']
 
-    def __init__(self, summary, description, fixed_files, opendate, fixdate,):
+    def __init__(self, summary, description, fixed_files, opendate, fixdate, commit, status,):
         self.summary = summary
         self.description = description
         self.fixed_files = fixed_files
         self.opendate = opendate
         self.fixdate = fixdate
+        self.commit = commit
+        self.status = status
         self.pos_tagged_summary = None
         self.pos_tagged_description = None
         self.stack_traces = None
@@ -34,7 +36,7 @@ class SourceFile:
                  'exact_file_name', 'package_name', 'class_imports']
 
     def __init__(self, all_content, comments, comments_hub, class_names, class_names_hub, attributes, attributes_hub,
-                 method_names, method_names_hub,variables, variables_hub, file_name, package_name, class_imports):
+                 method_names, method_names_hub, variables, variables_hub, file_name, package_name, class_imports):
         self.all_content = all_content  # chứa tất cả nội dung code
         self.comments = comments  # comments
         self.comments_hub = comments_hub  # comments
@@ -51,6 +53,15 @@ class SourceFile:
         self.package_name = package_name
         self.pos_tagged_comments = None
         self.class_imports = class_imports
+
+
+def myFun(e):
+    return e['@opendate']
+
+
+def myFunc(e):
+    return e['@fixdate']
+
 
 class Parser:
     """Class containing different parsers"""
@@ -70,6 +81,9 @@ class Parser:
             xml_dict = xmltodict.parse(
                 xml_file.read(), force_list={'file': True})
 
+        # bug report được sắp xếp theo opendate
+        xml_dict['bugrepository']['bug'].sort(key=myFun)
+
         # Iterate through bug reports and build their objects
         bug_reports = OrderedDict()
 
@@ -82,9 +96,151 @@ class Parser:
                  for path in bug_report['fixedFiles']['file']],
                 bug_report['@opendate'],
                 bug_report['@fixdate'],
+                bug_report['@commit'],
+                bug_report['@status'],
             )
 
         return bug_reports
+
+    def src_parser_bug(self):
+        """Parse XML format bug reports"""
+
+        # Convert XML bug repository to a dictionary
+        with open(self.bug_repo) as xml_file:
+            xml_dict = xmltodict.parse(
+                xml_file.read(), force_list={'file': True})
+
+        src_names = []
+        src_set = []
+        # bug report được sắp xếp theo opendate
+        xml_dict['bugrepository']['bug'].sort(reverse=True, key=myFunc)
+        for bug_report in xml_dict['bugrepository']['bug']:
+            for path in bug_report['fixedFiles']['file']:
+                # trường hợp file cùng tên cùng commit thì sao
+                # trường hợp cùng tên file nhưng khác commit thì sao
+                # path = path.split('/')[-1]
+                if path not in src_set:
+                    src_set.append(path)
+                    src_names.append(
+                        bug_report['@commit'] + ' ' + path.split('/')[-1])
+        # Iterate through bug reports and build their objects
+        # print((src_set))
+        # print((src_names))
+
+        # src_addresses = glob.glob(str(self.src) + '/**/*.java', recursive=True)
+        print(len(src_names))
+        # print(len(src_addresses))
+        # for src_file in src_addresses:
+        #     print(src_file)
+
+        # Creating a java lexer instance for pygments.lex() method
+        java_lexer = JavaLexer()
+
+        src_files = OrderedDict()
+
+        for src_name in src_names:
+            src_addresses = glob.glob(
+                str(self.src) + '/**/' + src_name, recursive=True)
+            for src_file in src_addresses:
+                print(src_file)
+                with open(src_file) as file:
+                    src = file.read()
+
+                # Placeholder for different parts of a source file
+                comments = ''
+                comments_hub = ''
+                class_names = []
+                class_names_hub = []
+                attributes = []
+                attributes_hub = []
+                method_names = []
+                method_names_hub = []
+                variables = []
+                variables_hub = []
+                class_imports = []
+                # print([os.path.basename(src_file).split('.')[0]])
+                # Source parsing
+                parse_tree = None
+                try:
+                    parse_tree = javalang.parse.parse(src)
+                    for path, node in parse_tree.filter(javalang.tree.VariableDeclarator):
+                        if isinstance(path[-2], javalang.tree.FieldDeclaration):
+                            attributes.append(node.name)
+                            attributes_hub.append(node.name)
+                        elif isinstance(path[-2], javalang.tree.VariableDeclaration):
+                            variables.append(node.name)
+                            variables_hub.append(node.name)
+                except:
+                    pass
+
+                # Trimming the source file
+                ind = False
+                if parse_tree:
+                    if parse_tree.imports:
+                        last_imp_path = parse_tree.imports[-1].path
+                        src = src[src.index(last_imp_path) +
+                                  len(last_imp_path) + 1:]
+                    elif parse_tree.package:
+                        package_name = parse_tree.package.name
+                        src = src[src.index(package_name) +
+                                  len(package_name) + 1:]
+                    else:  # There is no import and no package declaration
+                        ind = True
+                # javalang can't parse the source file
+                else:
+                    ind = True
+
+                # Lexically tokenize the source file
+                lexed_src = pygments.lex(src, java_lexer)
+                src__ = []
+                for token in lexed_src:
+                    src__.append(token)
+                for i, token in enumerate(src__):
+                    if token[0] is Token.Name and src__[i + 1][0] is Token.Text and src__[i + 2][0] is Token.Name:
+                        # print(token[1])
+                        class_imports.append(token[1])
+                for i, token in enumerate(lexed_src):
+                    if token[0] in Token.Comment:
+                        if ind and i == 0 and token[0] is Token.Comment.Multiline:
+                            src = src[src.index(token[1]) + len(token[1]):]
+                            continue
+                        comments += token[1]
+                        comments_hub += token[1]
+                    elif token[0] is Token.Name.Class:
+                        class_names.append(token[1])
+                        class_names_hub.append(token[1])
+                    elif token[0] is Token.Name.Function:
+                        method_names.append(token[1])
+                        method_names_hub.append(token[1])
+
+                # Get the package declaration if exists
+                if parse_tree and parse_tree.package:
+                    package_name = parse_tree.package.name
+                else:
+                    package_name = None
+
+                if self.name == 'aspectj':
+                    src_files[os.path.relpath(src_file, start=self.src)] = SourceFile(
+                        src, comments, comments_hub, class_names, class_names_hub, attributes, attributes_hub,
+                        method_names, method_names_hub, variables, variables_hub,
+                        [os.path.basename(src_file).split('.')[0]],
+                        package_name, class_imports
+                    )
+                else:
+                    # If source file has package declaration
+                    if package_name:
+                        src_id = (package_name + '.' +
+                                  os.path.basename(src_file))
+                    else:
+                        src_id = os.path.basename(src_file)
+
+                    src_files[src_id] = SourceFile(
+                        src, comments, comments_hub, class_names, class_names_hub, attributes, attributes_hub,
+                        method_names, method_names_hub, variables, variables_hub,
+                        [os.path.basename(src_file).split('.')[0]],
+                        package_name, class_imports
+                    )
+        return src_files
 
     def src_parser(self):
         """Parse source code directory of a program and collect
