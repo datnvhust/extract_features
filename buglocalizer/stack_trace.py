@@ -8,14 +8,12 @@ from datasets import DATASET
 def get_traces_score(src_files, bug_reports):
     
     all_file_names = set(s.exact_file_name.split(' ')[-1] for s in src_files.values())
-    # print(all_file_names)
     all_scores = []
     for report in bug_reports.values():
-        
+        print(report.commit)
         scores = []
         
         stack_traces = report.stack_traces
-        # Preprocessing stack-traces
         # print(stack_traces)
         final_st = []
         for trace in stack_traces:
@@ -32,7 +30,6 @@ def get_traces_score(src_files, bug_reports):
             file_name = src.exact_file_name.split(' ')[-1]
             # print(file_name)
             # print(src.package_name)
-            # If the source file has a package name
             if src.package_name:
                 if file_name in stack_traces and src.package_name in stack_traces[file_name]:
                     scores.append(1 / (list(stack_traces).index(file_name) + 1))

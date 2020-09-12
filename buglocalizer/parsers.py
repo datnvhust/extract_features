@@ -121,17 +121,13 @@ class Parser:
                 # path = path.split('/')[-1]
                 if path not in src_set:
                     src_set.append(path)
-                    src_names.append(
-                        bug_report['@commit'] + ' ' + path.split('/')[-1])
-        # Iterate through bug reports and build their objects
-        # print((src_set))
-        # print((src_names))
-
-        # src_addresses = glob.glob(str(self.src) + '/**/*.java', recursive=True)
+                    temp = path.split('/')
+                    temp[-1] = bug_report['@commit'] + ' ' + temp[-1]
+                    path = '/'.join(temp)
+                    # src_names.append(bug_report['@commit'] + ' ' + path.split('/')[-1])
+                    src_names.append(path)
+        print(len(src_set))
         print(len(src_names))
-        # print(len(src_addresses))
-        # for src_file in src_addresses:
-        #     print(src_file)
 
         # Creating a java lexer instance for pygments.lex() method
         java_lexer = JavaLexer()
@@ -141,7 +137,8 @@ class Parser:
         for src_name in src_names:
             src_addresses = glob.glob(
                 str(self.src) + '/**/' + src_name, recursive=True)
-            for src_file in src_addresses:
+            if len(src_addresses) > 0:
+                src_file = src_addresses[0]
                 print(src_file)
                 with open(src_file) as file:
                     src = file.read()
