@@ -117,12 +117,10 @@ def main():
         src_files = pickle.load(file)
     with open(DATASET.root / 'preprocessed_reports.pickle', 'rb') as file:
         bug_reports = pickle.load(file)
-    s1 = datetime.now()
-    print(s1)
     hubs = hub(src_files, bug_reports)
-    # print(len(hub))
-    s2 = datetime.now()
-    print(s2)
+    max_score = max(hubs[x] for x in hubs)
+    for x in hubs:
+        hubs[x] = hubs[x] / max_score
     with open(DATASET.root / 'hub.json', 'w') as file:
         json.dump(hubs, file)
 

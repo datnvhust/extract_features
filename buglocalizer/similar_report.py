@@ -139,8 +139,18 @@ def main():
     scores = similar_report_scores(src_files, bug_reports)
     print(len(scores))
     print(len(scores[0]))
+    max_score = np.max(scores)
+    print(max_score)
+
+    output = []
+    for bug in scores:
+        s = []
+        for source in bug:
+            s.append( source / max_score)
+        output.append(s)
+
     with open(DATASET.root / 'similar_report.json', 'w') as file:
-        json.dump(scores, file)
+        json.dump(output, file)
 
 
 if __name__ == '__main__':

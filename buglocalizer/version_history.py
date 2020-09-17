@@ -84,8 +84,19 @@ def main():
     version_history_scores = version_history(src_files, bug_reports)
     print(len(version_history_scores))
     print(len(version_history_scores[0]))
+    max_score = np.max(version_history_scores)
+    # print(np.min(version_history_scores))
+
+    output = []
+    for bug in version_history_scores:
+        scores = []
+        for source in bug:
+            scores.append( source / max_score)
+        output.append(scores)
+    # print(output)
+
     with open(DATASET.root / 'version_history.json', 'w') as file:
-        json.dump(version_history_scores, file)
+        json.dump(output, file)
 
 
 if __name__ == '__main__':

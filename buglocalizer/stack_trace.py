@@ -1,5 +1,6 @@
 import pickle
 import json
+import numpy as np
 from collections import OrderedDict
 
 from datasets import DATASET
@@ -58,6 +59,8 @@ def main():
     all_scores = get_traces_score(src_files, bug_reports)
     print(len(all_scores))
     print(len(all_scores[0]))
+    print(np.max(all_scores))
+    print(np.min(all_scores))
     with open(DATASET.root / 'stack_trace.json', 'w') as file:
         json.dump(all_scores, file)
 

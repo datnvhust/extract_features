@@ -253,7 +253,18 @@ def main():
     x, y, s1, s2, s3, s4 = tf.compute_tfidf_summary(bug_reports, src_files)
     text_structure = tf.compute_similarity(x, y, s1, s2, s3, s4)
     print(text_structure)
-    numpyData = {"data": text_structure}
+
+    output = []
+    min_score = np.min(text_structure)
+    max_score = np.max(text_structure)
+    max_min = max_score - min_score
+    for bug in text_structure:
+        scores = []
+        for source in bug:
+            scores.append((source - min_score) / max_min)
+        output.append(scores)
+    # print(output)
+    numpyData = {"data": output}
     with open(DATASET.root / 'text_structure.json', 'w') as file:
         json.dump(numpyData, file, cls=NumpyArrayEncoder)
 
