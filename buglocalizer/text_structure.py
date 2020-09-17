@@ -221,16 +221,19 @@ class TFIDFVectorizer():
         print(m)
         print(size)
         for i in range(n):
+            print(i)
+            __x = x_tfidf[i].reshape(1, size)
+            __y = y_tfidf[i].reshape(1, size)
             for j in range(m):
                 x_similarity[i][j] = (
-                    cosine_similarity(x_tfidf[i].reshape(1, size), s1[j].reshape(1, size))[0][0]
-                    + cosine_similarity(x_tfidf[i].reshape(1, size), s2[j].reshape(1, size))[0][0]
-                    + cosine_similarity(x_tfidf[i].reshape(1, size), s3[j].reshape(1, size))[0][0]
-                    + cosine_similarity(x_tfidf[i].reshape(1, size), s4[j].reshape(1, size))[0][0]
-                    + cosine_similarity(y_tfidf[i].reshape(1, size), s1[j].reshape(1, size))[0][0]
-                    + cosine_similarity(y_tfidf[i].reshape(1, size), s2[j].reshape(1, size))[0][0]
-                    + cosine_similarity(y_tfidf[i].reshape(1, size), s3[j].reshape(1, size))[0][0]
-                    + cosine_similarity(y_tfidf[i].reshape(1, size), s4[j].reshape(1, size))[0][0]
+                    cosine_similarity(__x, s1[j].reshape(1, size))[0][0]
+                    + cosine_similarity(__x, s2[j].reshape(1, size))[0][0]
+                    + cosine_similarity(__x, s3[j].reshape(1, size))[0][0]
+                    + cosine_similarity(__x, s4[j].reshape(1, size))[0][0]
+                    + cosine_similarity(__y, s1[j].reshape(1, size))[0][0]
+                    + cosine_similarity(__y, s2[j].reshape(1, size))[0][0]
+                    + cosine_similarity(__y, s3[j].reshape(1, size))[0][0]
+                    + cosine_similarity(__y, s4[j].reshape(1, size))[0][0]
                 )
         return x_similarity
 class NumpyArrayEncoder(JSONEncoder):

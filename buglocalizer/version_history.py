@@ -12,15 +12,7 @@ def version_history(src_files, bug_reports):
     # duyệt từng bug
     version_history_scores = []
     for report in bug_reports.values():
-        # print(report.opendate)
-        # summary = nlp(' '.join(report.summary['unstemmed']))
-        # print(summary)
-        # summary = tfidf.fit_transform(report.summary['unstemmed'])
-        # print(summary)
-        # description = nlp(' '.join(report.description['unstemmed']))
-        # print(report.pos_tagged_summary['unstemmed'])
-        # print(summary.similarity(description))
-
+        print(report.commit)
         # tìm các commit trong vòng 15 ngày (sẽ chứa các file)
         scores = []
         # input_bug_report = datetime.datetime.strptime(

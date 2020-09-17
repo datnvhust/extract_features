@@ -37,15 +37,21 @@ def hub(src_files, bug_reports):
         # print(src1.method_names_hub)
         # print(src1.variables_hub)
         # print(src1.class_imports)
-        print(src1.file_name['unstemmed'])
+        print(src1.exact_file_name)
+        # print(src1.class_imports)
         # print(src1.attributes)
         # print(s)/
-
+        src1_name = src1.exact_file_name.split(' ')[-1]
         cont = False
-        # inner class
+
         for s2, src2 in enumerate(src_files.values(), 1):
             if s1 == s2:
                 break
+            
+            for class_import in src2.class_imports:
+                if class_import == src1_name:
+                    results.append((s1, s2))
+                    break
             # for c in src1.class_names_hub:
             #     if cont == True:
             #         break
@@ -59,21 +65,38 @@ def hub(src_files, bug_reports):
             #     cont == True
             #     break
 
-            for method in src1.method_names_hub:
-                if cont == True:
-                    break
-                if searchList(src2.method_names_hub, method):
-                    results.append((s1, s2))
-                    cont == True
-                    break
+        # inner class
+        # for s2, src2 in enumerate(src_files.values(), 1):
+        #     if s1 == s2:
+        #         break
+        #     # for c in src1.class_names_hub:
+        #     #     if cont == True:
+        #     #         break
+        #     # print(src2.exact_file_name.split(' ')[-1], src1.exact_file_name.split(' ')[-1])
+        #     # if search(src2.exact_file_name.split(' ')[-1], src1.exact_file_name.split(' ')[-1]) == True:
+        #     #     print(src2.exact_file_name.split(' ')[-1])
+        #     #     print(src2.method_names_hub)
+        #     #     print(src1.method_names_hub)
+        #     #     print(src1.variables_hub)
+        #     #     results.append((s1, s2))
+        #     #     cont == True
+        #     #     break
+
+        #     for method in src1.method_names_hub:
+        #         if cont == True:
+        #             break
+        #         if searchList(src2.method_names_hub, method):
+        #             results.append((s1, s2))
+        #             cont == True
+        #             break
             
-            for method in src1.attributes_hub:
-                if cont == True:
-                    break
-                if searchList(src2.attributes_hub, method):
-                    results.append((s1, s2))
-                    cont == True
-                    break
+        #     for method in src1.attributes_hub:
+        #         if cont == True:
+        #             break
+        #         if searchList(src2.attributes_hub, method):
+        #             results.append((s1, s2))
+        #             cont == True
+        #             break
 
     print(results)
     G = nx.DiGraph()
