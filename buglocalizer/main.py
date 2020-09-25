@@ -52,3 +52,7 @@ similar_report.main()
 
 # print('Evaluating...')
 # evaluation.main()
+
+# k xóa bug k chưa description
+# tăng k
+# dùng doc2vec thay tfidf
