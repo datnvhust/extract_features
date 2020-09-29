@@ -131,9 +131,9 @@ def similar_report_scores(src_files, bug_reports):
 
 def main():
     # custom max rank = 10 and add set C
-    with open('../preprocess_data/preprocessed_src.pickle', 'rb') as file:
+    with open(DATASET.root / 'preprocessed_src.pickle', 'rb') as file:
         src_files = pickle.load(file)
-    with open('../preprocess_data/preprocessed_reports.pickle', 'rb') as file:
+    with open(DATASET.root / 'preprocessed_reports.pickle', 'rb') as file:
         bug_reports = pickle.load(file)
 
     scores = similar_report_scores(src_files, bug_reports)

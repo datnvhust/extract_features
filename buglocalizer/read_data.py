@@ -50,6 +50,7 @@ class TFIDFVectorizer():
             for word in data:
                 if word not in vocab:
                     vocab.append(word)
+                    print(word)
 
                 if word in docs_report__.keys():
                     docs_report__[word] += 1
@@ -108,12 +109,12 @@ def main():
 
     tf = TFIDFVectorizer()
     x, y= tf.compute_tfidf_summary(bug_reports, src_files)
-    print(len(x[0]))
-    print(len(y[0]))
-    with open(DATASET.root / 'report_tfidf.json', 'w') as file:
-        json.dump(x, file)
-    with open(DATASET.root / 'source_tfidf.json', 'w') as file:
-        json.dump(y, file)
+    print(len(src_files))
+    print(len(bug_reports))
+    # with open(DATASET.root / 'report_tfidf.json', 'w') as file:
+    #     json.dump(x, file)
+    # with open(DATASET.root / 'source_tfidf.json', 'w') as file:
+    #     json.dump(y, file)
 
 
 

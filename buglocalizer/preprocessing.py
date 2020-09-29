@@ -196,7 +196,7 @@ class SrcPreprocessing:
         """Extracing specific pos tags from comments"""
         
         for src in self.src_files.values():
-            
+            # print(src.id)
             # Tokenizing using word_tokeize for more accurate pos-tagging
             comments_tok = nltk.word_tokenize(src.comments)
             comments_pos = nltk.pos_tag(comments_tok)
@@ -395,16 +395,17 @@ def main():
     parser = Parser(DATASET)
     # print(parser)
     # print(parser.src_parser())
-    src_prep = SrcPreprocessing(parser.src_parser_bug())
-    src_prep.preprocess()
-    # print(src_prep)
-    with open(DATASET.root / 'preprocessed_src.pickle', 'wb') as file:
-        # for src in src_prep.src_files.values():
-        #     print(src.method_names_hub)
-        pickle.dump(src_prep.src_files, file, protocol=pickle.HIGHEST_PROTOCOL)
+    # src_prep = SrcPreprocessing(parser.src_parser_bug())
+    # src_prep.preprocess()
+    # print(len(src_prep.src_files))
+    # with open(DATASET.root / 'preprocessed_src.pickle', 'wb') as file:
+    #     # for src in src_prep.src_files.values():
+    #     #     print(src.method_names_hub)
+    #     pickle.dump(src_prep.src_files, file, protocol=pickle.HIGHEST_PROTOCOL)
     
     report_prep = ReportPreprocessing(parser.report_parser())
     report_prep.preprocess()
+    print(len(report_prep.bug_reports))
     with open(DATASET.root / 'preprocessed_reports.pickle', 'wb') as file:
         # print(report_prep.bug_reports)
         # for bug in report_prep.bug_reports.values():

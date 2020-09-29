@@ -13,9 +13,9 @@ class BugReport:
     """Class representing each bug report"""
 
     __slots__ = ['summary', 'description', 'fixed_files', 'opendate', 'fixdate', 'commit', 'status',
-                 'pos_tagged_summary', 'pos_tagged_description', 'stack_traces']
+                 'pos_tagged_summary', 'pos_tagged_description', 'stack_traces', 'id']
 
-    def __init__(self, summary, description, fixed_files, opendate, fixdate, commit, status,):
+    def __init__(self, summary, description, fixed_files, opendate, fixdate, commit, status, bug_id):
         self.summary = summary
         self.description = description
         self.fixed_files = fixed_files
@@ -26,6 +26,7 @@ class BugReport:
         self.pos_tagged_summary = None
         self.pos_tagged_description = None
         self.stack_traces = None
+        self.id = bug_id
 
 
 class SourceFile:
@@ -33,10 +34,10 @@ class SourceFile:
 
     __slots__ = ['all_content', 'comments', 'comments_hub', 'class_names', 'class_names_hub', 'attributes', 'attributes_hub',
                  'method_names', 'method_names_hub', 'variables', 'variables_hub', 'file_name', 'pos_tagged_comments',
-                 'exact_file_name', 'package_name', 'class_imports']
+                 'exact_file_name', 'package_name', 'class_imports', 'id']
 
     def __init__(self, all_content, comments, comments_hub, class_names, class_names_hub, attributes, attributes_hub,
-                 method_names, method_names_hub, variables, variables_hub, file_name, package_name, class_imports):
+                 method_names, method_names_hub, variables, variables_hub, file_name, package_name, class_imports, src_id):
         self.all_content = all_content  # chứa tất cả nội dung code
         self.comments = comments  # comments
         self.comments_hub = comments_hub  # comments
@@ -53,6 +54,7 @@ class SourceFile:
         self.package_name = package_name
         self.pos_tagged_comments = None
         self.class_imports = class_imports
+        self.id = src_id
 
 
 def myFun(e):
@@ -83,7 +85,7 @@ class Parser:
 
         # bug report được sắp xếp theo opendate
         xml_dict['bugrepository']['bug'].sort(key=myFun)
-
+        print(len(xml_dict['bugrepository']['bug']))
         # Iterate through bug reports and build their objects
         bug_reports = OrderedDict()
 
@@ -98,6 +100,7 @@ class Parser:
                 bug_report['@fixdate'],
                 bug_report['@commit'],
                 bug_report['@status'],
+                bug_report['@id']
             )
 
         return bug_reports
@@ -126,8 +129,6 @@ class Parser:
                     path = '/'.join(temp)
                     # src_names.append(bug_report['@commit'] + ' ' + path.split('/')[-1])
                     src_names.append(path)
-        print(len(src_set))
-        print(len(src_names))
 
         # Creating a java lexer instance for pygments.lex() method
         java_lexer = JavaLexer()
@@ -221,7 +222,8 @@ class Parser:
                         src, comments, comments_hub, class_names, class_names_hub, attributes, attributes_hub,
                         method_names, method_names_hub, variables, variables_hub,
                         [os.path.basename(src_file).split('.')[0]],
-                        package_name, class_imports
+                        package_name, class_imports,
+                        os.path.relpath(src_file, start=self.src)
                     )
                 else:
                     # If source file has package declaration
@@ -235,7 +237,8 @@ class Parser:
                         src, comments, comments_hub, class_names, class_names_hub, attributes, attributes_hub,
                         method_names, method_names_hub, variables, variables_hub,
                         [os.path.basename(src_file).split('.')[0]],
-                        package_name, class_imports
+                        package_name, class_imports,
+                        src_id
                     )
         return src_files
 

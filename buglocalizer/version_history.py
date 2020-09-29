@@ -11,6 +11,7 @@ import numpy as np
 def version_history(src_files, bug_reports):
     # duyệt từng bug
     version_history_scores = []
+    k = 45
     for report in bug_reports.values():
         print(report.commit)
         # tìm các commit trong vòng 15 ngày (sẽ chứa các file)
@@ -24,7 +25,7 @@ def version_history(src_files, bug_reports):
             # commit_date = datetime.datetime.strptime(
             #     rep.fixdate, '%Y-%m-%d %H:%M:%S').timestamp()
             commit_date = int(rep.fixdate)
-            if (input_bug_report > commit_date) and (input_bug_report - commit_date < 1 * 60 * 60 * 24 * 15):
+            if (input_bug_report > commit_date) and (input_bug_report - commit_date < 1 * 60 * 60 * 24 * k):
                 # print((input_bug_report - commit_date)/1 / 60 / 60 / 24)
                 # x = [r.split('.')[-2]
                 #      for r in rep.fixed_files]
@@ -49,22 +50,13 @@ def version_history(src_files, bug_reports):
                         # print(exact_file_name, f)
                         # if(src.exact_file_name == f):
                         if(exact_file_name == f):
-                            k = 15
+                            # k = 15
                             # tc = (input_bug_report - datetime.datetime.strptime(
                             #     relevant_commit.fixdate, '%Y-%m-%d %H:%M:%S').timestamp()) / 60/60/24
                             tc = (input_bug_report - int(relevant_commit.fixdate)) / 60 / 60 / 24
-                            # print(tc)
-                            # print(f)
                             # print(datetime.datetime.strptime(
                             #     relevant_commit.fixdate, '%Y-%m-%d %H:%M:%S').timestamp())
-                            # print(input_bug_report)
-                            # print((input_bug_report - datetime.datetime.strptime(
-                            #     relevant_commit.fixdate, '%Y-%m-%d %H:%M:%S').timestamp()) / 60/60/24)
                             history_score += 1 / ( 1 + np.exp(tc / k))
-                    # print(src.exact_file_name, relevant_commit)
-                # if(src.exact_file_name in x):
-                #     print(src.exact_file_name)
-                # print(src.exact_file_name)
                 # Nếu file không thuộc các commit trên thì bỏ
                 scores.append(history_score)
             else:
@@ -86,14 +78,17 @@ def main():
     print(len(version_history_scores[0]))
     max_score = np.max(version_history_scores)
     # print(np.min(version_history_scores))
-
+    count_0 = 0
     output = []
     for bug in version_history_scores:
         scores = []
         for source in bug:
+            if source == 0:
+                count_0 = count_0 + 1
             scores.append( source / max_score)
         output.append(scores)
     # print(output)
+    print(count_0)
 
     with open(DATASET.root / 'version_history.json', 'w') as file:
         json.dump(output, file)
@@ -103,3 +98,7 @@ if __name__ == '__main__':
     main()
 
     # tăng k
+
+# k = 30: 511068
+# k = 15: 524200
+# k = 45: 499767
