@@ -191,12 +191,7 @@ class Parser:
                 # Lexically tokenize the source file
                 lexed_src = pygments.lex(src, java_lexer)
                 src__ = []
-                for token in lexed_src:
-                    src__.append(token)
-                for i, token in enumerate(src__):
-                    if token[0] is Token.Name and src__[i + 1][0] is Token.Text and src__[i + 2][0] is Token.Name:
-                        # print(token[1])
-                        class_imports.append(token[1])
+                
                 for i, token in enumerate(lexed_src):
                     if token[0] in Token.Comment:
                         if ind and i == 0 and token[0] is Token.Comment.Multiline:
@@ -210,6 +205,13 @@ class Parser:
                     elif token[0] is Token.Name.Function:
                         method_names.append(token[1])
                         method_names_hub.append(token[1])
+
+                for token in lexed_src:
+                    src__.append(token)
+                for i, token in enumerate(src__):
+                    if token[0] is Token.Name and src__[i + 1][0] is Token.Text and src__[i + 2][0] is Token.Name:
+                        # print(token[1])
+                        class_imports.append(token[1])
 
                 # Get the package declaration if exists
                 if parse_tree and parse_tree.package:
@@ -337,7 +339,8 @@ class Parser:
                     src, comments, comments_hub, class_names, class_names_hub, attributes, attributes_hub,
                     method_names, method_names_hub, variables, variables_hub,
                     [os.path.basename(src_file).split('.')[0]],
-                    package_name, class_imports
+                    package_name, class_imports,
+                    os.path.relpath(src_file, start=self.src)
                 )
             else:
                 # If source file has package declaration
@@ -351,7 +354,8 @@ class Parser:
                     src, comments, comments_hub, class_names, class_names_hub, attributes, attributes_hub,
                     method_names, method_names_hub, variables, variables_hub,
                     [os.path.basename(src_file).split('.')[0]],
-                    package_name, class_imports
+                    package_name, class_imports,
+                    src_id
                 )
         return src_files
 

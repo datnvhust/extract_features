@@ -209,6 +209,11 @@ class TFIDFVectorizer():
         """
         n = len(x_tfidf)
         m = len(s1)
+        print(len(s1))
+        print(len(s2))
+        print(len(s3))
+        print(len(s4))
+
         size = len(x_tfidf[n-1])
         x_tfidf = np.asarray(x_tfidf)
         y_tfidf = np.asarray(y_tfidf)
