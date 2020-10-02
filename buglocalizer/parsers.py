@@ -259,6 +259,7 @@ class Parser:
 
         # Looping to parse each source file
         for src_file in src_addresses:
+            print(src_file)
             with open(src_file) as file:
                 src = file.read()
 

@@ -200,32 +200,34 @@ class NumpyArrayEncoder(JSONEncoder):
 
 def main():
 
-    # with open(DATASET.root / 'preprocessed_src.pickle', 'rb') as file:
-    #     src_files = pickle.load(file)
-    # with open(DATASET.root / 'preprocessed_reports.pickle', 'rb') as file:
-    #     bug_reports = pickle.load(file)
-    # print(len(src_files))
-    # tf = TFIDFVectorizer()
-    # x, y, s3 = tf.compute_tfidf_summary(bug_reports, src_files)
-    # print(len(x))
-    # print(len(y))
-    # with open(DATASET.root / 'x_tfidf.json', 'w') as file:
-    #     json.dump(x, file)
-    # with open(DATASET.root / 'y_tfidf.json', 'w') as file:
-    #     json.dump(y, file)
-
-    # with open(DATASET.root / 's3.json', 'w') as file:
-    #     json.dump(s3, file)
-    # with open(DATASET.root / 'features1_update.json', 'rb') as file:
-    #     z = json.load(file)['data']
-    # print(len(z))
-    with open(DATASET.root / 'x_tfidf.json', 'rb') as file:
-        x = json.load(file)
-    with open(DATASET.root / 'y_tfidf.json', 'rb') as file:
-        y = json.load(file)
-    with open(DATASET.root / 's3.json', 'rb') as file:
-        s3 = json.load(file)
+    with open(DATASET.root / 'preprocessed_src.pickle', 'rb') as file:
+        src_files = pickle.load(file)
+    with open(DATASET.root / 'preprocessed_reports.pickle', 'rb') as file:
+        bug_reports = pickle.load(file)
+    print(len(src_files))
     tf = TFIDFVectorizer()
+    x, y, s3 = tf.compute_tfidf_summary(bug_reports, src_files)
+    print(len(x))
+    print(len(y))
+    with open(DATASET.root / 'x_tfidf.json', 'w') as file:
+        json.dump(x, file)
+    with open(DATASET.root / 'y_tfidf.json', 'w') as file:
+        json.dump(y, file)
+
+    with open(DATASET.root / 's3.json', 'w') as file:
+        json.dump(s3, file)
+    with open(DATASET.root / 'features1_update.json', 'rb') as file:
+        z = json.load(file)['data']
+    print(len(z))
+
+
+    # with open(DATASET.root / 'x_tfidf.json', 'rb') as file:
+    #     x = json.load(file)
+    # with open(DATASET.root / 'y_tfidf.json', 'rb') as file:
+    #     y = json.load(file)
+    # with open(DATASET.root / 's3.json', 'rb') as file:
+    #     s3 = json.load(file)
+    # tf = TFIDFVectorizer()
     text_structure = tf.compute_similarity(x, y, s3)
     print(text_structure)
 

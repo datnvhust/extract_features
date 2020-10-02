@@ -395,7 +395,7 @@ def main():
     parser = Parser(DATASET)
     # print(parser)
     # print(parser.src_parser())
-    src_prep = SrcPreprocessing(parser.src_parser_bug())
+    src_prep = SrcPreprocessing(parser.src_parser())
     src_prep.preprocess()
     print(len(src_prep.src_files))
     with open(DATASET.root / 'preprocessed_src.pickle', 'wb') as file:
