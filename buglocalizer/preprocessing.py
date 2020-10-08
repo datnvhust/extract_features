@@ -1,5 +1,6 @@
 import string
 import pickle
+import json
 import re
 
 import inflection
@@ -395,22 +396,28 @@ def main():
     parser = Parser(DATASET)
     # print(parser)
     # print(parser.src_parser())
-    src_prep = SrcPreprocessing(parser.src_parser())
-    src_prep.preprocess()
-    print(len(src_prep.src_files))
-    with open(DATASET.root / 'preprocessed_src.pickle', 'wb') as file:
+    x = parser.src_parser_bug()
+    # print(x)
+    # src_prep = SrcPreprocessing(parser.src_parser_bug())
+    with open(DATASET.root / 'bug_commit.json', 'w') as file:
         # for src in src_prep.src_files.values():
         #     print(src.method_names_hub)
-        pickle.dump(src_prep.src_files, file, protocol=pickle.HIGHEST_PROTOCOL)
+        json.dump(x, file)
+    # src_prep.preprocess()
+    # print(len(src_prep.src_files))
+    # with open(DATASET.root / 'preprocessed_src.pickle', 'wb') as file:
+    #     # for src in src_prep.src_files.values():
+    #     #     print(src.method_names_hub)
+    #     pickle.dump(src_prep.src_files, file, protocol=pickle.HIGHEST_PROTOCOL)
     
-    report_prep = ReportPreprocessing(parser.report_parser())
-    report_prep.preprocess()
-    print(len(report_prep.bug_reports))
-    with open(DATASET.root / 'preprocessed_reports.pickle', 'wb') as file:
-        # print(report_prep.bug_reports)
-        # for bug in report_prep.bug_reports.values():
-            # print(bug.summary)
-        pickle.dump(report_prep.bug_reports, file, protocol=pickle.HIGHEST_PROTOCOL)
+    # report_prep = ReportPreprocessing(parser.report_parser())
+    # report_prep.preprocess()
+    # print(len(report_prep.bug_reports))
+    # with open(DATASET.root / 'preprocessed_reports.pickle', 'wb') as file:
+    #     # print(report_prep.bug_reports)
+    #     # for bug in report_prep.bug_reports.values():
+    #         # print(bug.summary)
+    #     pickle.dump(report_prep.bug_reports, file, protocol=pickle.HIGHEST_PROTOCOL)
 
 if __name__ == '__main__':
     main()

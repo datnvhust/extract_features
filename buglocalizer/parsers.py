@@ -115,134 +115,210 @@ class Parser:
 
         src_names = []
         src_set = []
+        src_set_bug = []
+        z = []
         # bug report được sắp xếp theo opendate
-        xml_dict['bugrepository']['bug'].sort(reverse=True, key=myFunc)
+        xml_dict['bugrepository']['bug'].sort(reverse=False, key=myFunc)
+        x = 0
         for bug_report in xml_dict['bugrepository']['bug']:
+            # print(bug_report['@fixdate'])
             for path in bug_report['fixedFiles']['file']:
-                # trường hợp file cùng tên cùng commit thì sao
-                # trường hợp cùng tên file nhưng khác commit thì sao
-                # path = path.split('/')[-1]
-                if path not in src_set:
-                    src_set.append(path)
+                temp = path.split('/')
+                temp[-1] = bug_report['@commit'] + ' ' + temp[-1]
+                t = '/'.join(temp)
+
+                parse_tree = None
+                try:
+                    t.replace("/", "\\")
+                    t = glob.glob(str(self.src) + '/' + t, recursive=True)
+                    with open(t[0]) as file:
+                        src = file.read()
+                    parse_tree = javalang.parse.parse(src)
+                    src_names.append(t)
+                # print(t)
+                    x = x + 1
+                    if path not in src_set:
+                        src_set.append(path)
+                        # print(path)
+                        temp = path.split('/')
+                        temp[-1] = bug_report['@commit'] + ' ' + temp[-1]
+                        path = '/'.join(temp)
+                        # src_names.append(bug_report['@commit'] + ' ' + path.split('/')[-1])
+                        src_set_bug.append([path, 0])
+                except:
+                    pass
+                # src_names.append(t)
+                # # print(t)
+                # x = x + 1
+                # if path not in src_set:
+                #     src_set.append(path)
+                #     # print(path)
+                #     temp = path.split('/')
+                #     temp[-1] = bug_report['@commit'] + ' ' + temp[-1]
+                #     path = '/'.join(temp)
+                #     # src_names.append(bug_report['@commit'] + ' ' + path.split('/')[-1])
+                #     src_set_bug.append(path)
+        for bug_report in xml_dict['bugrepository']['bug']:
+            tc = list(src_set_bug)
+            for path in bug_report['fixedFiles']['file']:
+                try:
+                    index = src_set.index(path)
                     temp = path.split('/')
                     temp[-1] = bug_report['@commit'] + ' ' + temp[-1]
                     path = '/'.join(temp)
-                    # src_names.append(bug_report['@commit'] + ' ' + path.split('/')[-1])
-                    src_names.append(path)
-
-        # Creating a java lexer instance for pygments.lex() method
-        java_lexer = JavaLexer()
-
-        src_files = OrderedDict()
-
-        for src_name in src_names:
-            src_addresses = glob.glob(
-                str(self.src) + '/**/' + src_name, recursive=True)
-            if len(src_addresses) > 0:
-                src_file = src_addresses[0]
-                print(src_file)
-                with open(src_file) as file:
-                    src = file.read()
-
-                # Placeholder for different parts of a source file
-                comments = ''
-                comments_hub = ''
-                class_names = []
-                class_names_hub = []
-                attributes = []
-                attributes_hub = []
-                method_names = []
-                method_names_hub = []
-                variables = []
-                variables_hub = []
-                class_imports = []
-                # print([os.path.basename(src_file).split('.')[0]])
-                # Source parsing
-                parse_tree = None
-                try:
-                    parse_tree = javalang.parse.parse(src)
-                    for path, node in parse_tree.filter(javalang.tree.VariableDeclarator):
-                        if isinstance(path[-2], javalang.tree.FieldDeclaration):
-                            attributes.append(node.name)
-                            attributes_hub.append(node.name)
-                        elif isinstance(path[-2], javalang.tree.VariableDeclaration):
-                            variables.append(node.name)
-                            variables_hub.append(node.name)
+                    # print(src_set_bug[index])
+                    # print(path)
+                    value = list(tc[index])
+                    value[1] = 1
+                    tc[index] = value
+                    src_set_bug[index] = [path, 0]
                 except:
                     pass
+                # print(src_set_bug[index])
+            z.append(tc)
 
-                # Trimming the source file
-                ind = False
-                if parse_tree:
-                    if parse_tree.imports:
-                        last_imp_path = parse_tree.imports[-1].path
-                        src = src[src.index(last_imp_path) +
-                                  len(last_imp_path) + 1:]
-                    elif parse_tree.package:
-                        package_name = parse_tree.package.name
-                        src = src[src.index(package_name) +
-                                  len(package_name) + 1:]
-                    else:  # There is no import and no package declaration
-                        ind = True
-                # javalang can't parse the source file
-                else:
-                    ind = True
 
-                # Lexically tokenize the source file
-                lexed_src = pygments.lex(src, java_lexer)
-                src__ = []
+        print(x) # 2176
+        print(len(src_set)) # 940
+        print(len(src_names)) # 2176
+        # count_src_name = []
+        # for src_name in src_set:
+        #     count = 0
+        #     for names in src_names:
+        #         name = names.split("/")
+        #         name[-1] = name[-1].split(" ")[-1]
+        #         names = "/".join(name)
+        #         if src_name == names:
+        #             count = count + 1
+        #     count_src_name.append(count)
+        # print(count_src_name)
+        return z
+        # for bug_report in xml_dict['bugrepository']['bug']:
+        #     for path in bug_report['fixedFiles']['file']:
+        #         # trường hợp file cùng tên cùng commit thì sao
+        #         # trường hợp cùng tên file nhưng khác commit thì sao
+        #         # path = path.split('/')[-1]
+        #         if path not in src_set:
+        #             src_set.append(path)
+        #             temp = path.split('/')
+        #             temp[-1] = bug_report['@commit'] + ' ' + temp[-1]
+        #             path = '/'.join(temp)
+        #             # src_names.append(bug_report['@commit'] + ' ' + path.split('/')[-1])
+        #             src_names.append(path)
+
+        # # Creating a java lexer instance for pygments.lex() method
+        # java_lexer = JavaLexer()
+
+        # src_files = OrderedDict()
+
+        # for src_name in src_names:
+        #     src_addresses = glob.glob(
+        #         str(self.src) + '/**/' + src_name, recursive=True)
+        #     if len(src_addresses) > 0:
+        #         src_file = src_addresses[0]
+        #         print(src_file)
+        #         with open(src_file) as file:
+        #             src = file.read()
+
+        #         # Placeholder for different parts of a source file
+        #         comments = ''
+        #         comments_hub = ''
+        #         class_names = []
+        #         class_names_hub = []
+        #         attributes = []
+        #         attributes_hub = []
+        #         method_names = []
+        #         method_names_hub = []
+        #         variables = []
+        #         variables_hub = []
+        #         class_imports = []
+        #         # print([os.path.basename(src_file).split('.')[0]])
+        #         # Source parsing
+        #         parse_tree = None
+        #         try:
+        #             parse_tree = javalang.parse.parse(src)
+        #             for path, node in parse_tree.filter(javalang.tree.VariableDeclarator):
+        #                 if isinstance(path[-2], javalang.tree.FieldDeclaration):
+        #                     attributes.append(node.name)
+        #                     attributes_hub.append(node.name)
+        #                 elif isinstance(path[-2], javalang.tree.VariableDeclaration):
+        #                     variables.append(node.name)
+        #                     variables_hub.append(node.name)
+        #         except:
+        #             pass
+
+        #         # Trimming the source file
+        #         ind = False
+        #         if parse_tree:
+        #             if parse_tree.imports:
+        #                 last_imp_path = parse_tree.imports[-1].path
+        #                 src = src[src.index(last_imp_path) +
+        #                           len(last_imp_path) + 1:]
+        #             elif parse_tree.package:
+        #                 package_name = parse_tree.package.name
+        #                 src = src[src.index(package_name) +
+        #                           len(package_name) + 1:]
+        #             else:  # There is no import and no package declaration
+        #                 ind = True
+        #         # javalang can't parse the source file
+        #         else:
+        #             ind = True
+
+        #         # Lexically tokenize the source file
+        #         lexed_src = pygments.lex(src, java_lexer)
+        #         src__ = []
                 
-                for i, token in enumerate(lexed_src):
-                    if token[0] in Token.Comment:
-                        if ind and i == 0 and token[0] is Token.Comment.Multiline:
-                            src = src[src.index(token[1]) + len(token[1]):]
-                            continue
-                        comments += token[1]
-                        comments_hub += token[1]
-                    elif token[0] is Token.Name.Class:
-                        class_names.append(token[1])
-                        class_names_hub.append(token[1])
-                    elif token[0] is Token.Name.Function:
-                        method_names.append(token[1])
-                        method_names_hub.append(token[1])
+        #         for i, token in enumerate(lexed_src):
+        #             if token[0] in Token.Comment:
+        #                 if ind and i == 0 and token[0] is Token.Comment.Multiline:
+        #                     src = src[src.index(token[1]) + len(token[1]):]
+        #                     continue
+        #                 comments += token[1]
+        #                 comments_hub += token[1]
+        #             elif token[0] is Token.Name.Class:
+        #                 class_names.append(token[1])
+        #                 class_names_hub.append(token[1])
+        #             elif token[0] is Token.Name.Function:
+        #                 method_names.append(token[1])
+        #                 method_names_hub.append(token[1])
 
-                for token in lexed_src:
-                    src__.append(token)
-                for i, token in enumerate(src__):
-                    if token[0] is Token.Name and src__[i + 1][0] is Token.Text and src__[i + 2][0] is Token.Name:
-                        # print(token[1])
-                        class_imports.append(token[1])
+        #         for token in lexed_src:
+        #             src__.append(token)
+        #         for i, token in enumerate(src__):
+        #             if token[0] is Token.Name and src__[i + 1][0] is Token.Text and src__[i + 2][0] is Token.Name:
+        #                 # print(token[1])
+        #                 class_imports.append(token[1])
 
-                # Get the package declaration if exists
-                if parse_tree and parse_tree.package:
-                    package_name = parse_tree.package.name
-                else:
-                    package_name = None
+        #         # Get the package declaration if exists
+        #         if parse_tree and parse_tree.package:
+        #             package_name = parse_tree.package.name
+        #         else:
+        #             package_name = None
 
-                if self.name == 'aspectj':
-                    src_files[os.path.relpath(src_file, start=self.src)] = SourceFile(
-                        src, comments, comments_hub, class_names, class_names_hub, attributes, attributes_hub,
-                        method_names, method_names_hub, variables, variables_hub,
-                        [os.path.basename(src_file).split('.')[0]],
-                        package_name, class_imports,
-                        os.path.relpath(src_file, start=self.src)
-                    )
-                else:
-                    # If source file has package declaration
-                    if package_name:
-                        src_id = (package_name + '.' +
-                                  os.path.basename(src_file))
-                    else:
-                        src_id = os.path.basename(src_file)
+        #         if self.name == 'aspectj':
+        #             src_files[os.path.relpath(src_file, start=self.src)] = SourceFile(
+        #                 src, comments, comments_hub, class_names, class_names_hub, attributes, attributes_hub,
+        #                 method_names, method_names_hub, variables, variables_hub,
+        #                 [os.path.basename(src_file).split('.')[0]],
+        #                 package_name, class_imports,
+        #                 os.path.relpath(src_file, start=self.src)
+        #             )
+        #         else:
+        #             # If source file has package declaration
+        #             if package_name:
+        #                 src_id = (package_name + '.' +
+        #                           os.path.basename(src_file))
+        #             else:
+        #                 src_id = os.path.basename(src_file)
 
-                    src_files[src_id] = SourceFile(
-                        src, comments, comments_hub, class_names, class_names_hub, attributes, attributes_hub,
-                        method_names, method_names_hub, variables, variables_hub,
-                        [os.path.basename(src_file).split('.')[0]],
-                        package_name, class_imports,
-                        src_id
-                    )
-        return src_files
+        #             src_files[src_id] = SourceFile(
+        #                 src, comments, comments_hub, class_names, class_names_hub, attributes, attributes_hub,
+        #                 method_names, method_names_hub, variables, variables_hub,
+        #                 [os.path.basename(src_file).split('.')[0]],
+        #                 package_name, class_imports,
+        #                 src_id
+        #             )
+        # return src_files
 
     def src_parser(self):
         """Parse source code directory of a program and collect
@@ -258,8 +334,9 @@ class Parser:
         src_files = OrderedDict()
 
         # Looping to parse each source file
+        fail_src = 0
         for src_file in src_addresses:
-            print(src_file)
+            # print(src_file)
             with open(src_file) as file:
                 src = file.read()
 
@@ -288,6 +365,8 @@ class Parser:
                         variables.append(node.name)
                         variables_hub.append(node.name)
             except:
+                fail_src = fail_src + 1
+                print(fail_src, src_file)
                 pass
 
             # Trimming the source file

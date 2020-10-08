@@ -3,19 +3,28 @@ import json
 from datasets import DATASET
 from collections import OrderedDict
 
-with open(DATASET.root / 'Aspectj_name.json', 'rb') as file:
-    src_name1 = json.load(file)
-with open(DATASET.root / 'preprocessed_src_id.json', 'rb') as file:
-    src_name2 = json.load(file)
+# with open(DATASET.root / 'Aspectj_name.json', 'rb') as file:
+#     src_name1 = json.load(file)
+# with open(DATASET.root / 'preprocessed_src_id.json', 'rb') as file:
+#     src_name2 = json.load(file)
 
-print(len(src_name1))
-print(len(src_name2))
-out = []
-for x in src_name2:
-    out.append(x.split("/")[-1])
-print(src_name2[146: 149])
-for i, x in enumerate(out):
-    print(x, x in src_name1)
+# print(len(src_name1))
+# print(len(src_name2))
+# out = []
+# for x in src_name2:
+#     out.append(x.split("/")[-1])
+# print(src_name2[146: 149])
+# for i, x in enumerate(out):
+#     print(x, x in src_name1)
+
+
+with open(DATASET.root / 'features1_update.json', 'rb') as file:
+    f = json.load(file)["data"]
+print(len(f))
+print(len(f[0]))
+
+
+
 # with open(DATASET.root / 'preprocessed_src.pickle', 'rb') as file:
 #     src_files = pickle.load(file)
 # with open(DATASET.root / 'preprocessed_reports.pickle', 'rb') as file:
