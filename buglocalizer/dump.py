@@ -5,11 +5,11 @@ from collections import OrderedDict
 
 # with open(DATASET.root / 'Aspectj_name.json', 'rb') as file:
 #     src_name1 = json.load(file)
-# with open(DATASET.root / 'preprocessed_src_id.json', 'rb') as file:
-#     src_name2 = json.load(file)
+with open(DATASET.root / 'preprocessed_src_id.json', 'rb') as file:
+    src_name2 = json.load(file)
 
 # print(len(src_name1))
-# print(len(src_name2))
+print(len(src_name2))
 # out = []
 # for x in src_name2:
 #     out.append(x.split("/")[-1])

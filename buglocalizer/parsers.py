@@ -122,6 +122,7 @@ class Parser:
         x = 0
         for bug_report in xml_dict['bugrepository']['bug']:
             # print(bug_report['@fixdate'])
+            print(bug_report['@id'])
             for path in bug_report['fixedFiles']['file']:
                 temp = path.split('/')
                 temp[-1] = bug_report['@commit'] + ' ' + temp[-1]
@@ -144,7 +145,7 @@ class Parser:
                         temp[-1] = bug_report['@commit'] + ' ' + temp[-1]
                         path = '/'.join(temp)
                         # src_names.append(bug_report['@commit'] + ' ' + path.split('/')[-1])
-                        src_set_bug.append([path, 0])
+                        src_set_bug.append([path, 0, bug_report['@id']])
                 except:
                     pass
                 # src_names.append(t)
@@ -158,8 +159,10 @@ class Parser:
                 #     path = '/'.join(temp)
                 #     # src_names.append(bug_report['@commit'] + ' ' + path.split('/')[-1])
                 #     src_set_bug.append(path)
+        print(len(src_set_bug))
         for bug_report in xml_dict['bugrepository']['bug']:
             tc = list(src_set_bug)
+            print(bug_report['@id'])
             for path in bug_report['fixedFiles']['file']:
                 try:
                     index = src_set.index(path)
@@ -171,7 +174,7 @@ class Parser:
                     value = list(tc[index])
                     value[1] = 1
                     tc[index] = value
-                    src_set_bug[index] = [path, 0]
+                    src_set_bug[index] = [path, 0, bug_report['@id']]
                 except:
                     pass
                 # print(src_set_bug[index])
