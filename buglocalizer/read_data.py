@@ -65,29 +65,25 @@ class TFIDFVectorizer():
     
         return returning_tokens
 
-    def compute_tfidf_summary(self, bug_reports, sources, bug_commits, process_clean):
+    def compute_tfidf_summary(self, bug_reports, sources, bug_commits):
         
-        # print(bug_commits[0])
+        print(bug_commits[0][0])
+        print(bug_commits[1][0])
+        print(bug_commits[455][0])
         # print(len(bug_commits))
         # print(len(bug_commits[6]))
         # print(len(sources))
-        summary = list((process_clean)['summary'])
-        description = list((process_clean)['description'])
         # for rep in process_clean['summary']:
         #     print(rep)
         output = []
         output_tfidf = []
-        for i, report in enumerate(summary):
+        for i, report in enumerate(bug_reports.values()):
             print(i)
             vocab = []
             docs_report = []
             docs_source = []
             docs_method = []
-            if not description[i] or pd.isnull(description[i]):
-                data = report
-            else:
-                data = report +  description[i]
-
+            data = report.summary['stemmed'] +  report.description['stemmed']
             docs_report__ = {}
             for word in data:
                 if word not in vocab:
@@ -100,26 +96,26 @@ class TFIDFVectorizer():
             
             docs_report.append(docs_report__)
             
-            for j, bug_commit in enumerate(bug_commits[0]):
+            for j, bug_commit in enumerate(bug_commits[i]):
                 path = bug_commit[0].replace('/', '\\')
                 src = sources[path]
-                docs_source_ = {}
+                # docs_source_ = {}
                 data = src.file_name['stemmed']  + src.attributes['stemmed'] +  src.method_names['stemmed'] + src.comments['stemmed']
                 for word in data:
                     if word not in vocab:
                         vocab.append(word)
-                    if word in docs_source_.keys():
-                        docs_source_[word] += 1
-                    else:
-                        docs_source_[word] = 1
-                docs_source.append(docs_source_)
-                d3 = {}
-                for word in src.method_names_hub:
-                    if word in d3.keys():
-                        d3[word] += 1
-                    else:
-                        d3[word] = 1
-                docs_method.append(d3)
+                    # if word in docs_source_.keys():
+                    #     docs_source_[word] += 1
+                    # else:
+                    #     docs_source_[word] = 1
+                docs_source.append(src.all_content)
+                # d3 = {}
+                # for word in src.method_names_hub:
+                #     if word in d3.keys():
+                #         d3[word] += 1
+                #     else:
+                #         d3[word] = 1
+                docs_method.append(src.id)
             print(len(docs_source)) # 940
             print(len(vocab)) # 3410
             x_tfidf = []
@@ -136,8 +132,10 @@ class TFIDFVectorizer():
             print("x_tfidf", len(x_tfidf))
             y_tfidf = []
             for doc in docs_source:
+                # print(doc)
                 for word in doc:
                     doc[word] = self.tfidf(word, doc, docs_source)
+                # print(doc)
                 row = []
                 for f in vocab:
                     if f in doc.keys():
@@ -161,6 +159,8 @@ class TFIDFVectorizer():
             data = self.cosine_sim(x_tfidf, y_tfidf, s3)
             output.append(data)
             output_tfidf.append([x_tfidf, y_tfidf, s3])
+            # with open(DATASET.root / i /'x_tfidf.json'), 'w') as file:
+            #     json.dump([x_tfidf, y_tfidf, s3], file)
         return output_tfidf, output
         # print((sources['ajbrowser\\src\\org\\aspectj\\tools\\ajbrowser\\85a827a BrowserProperties.java'].id))
         # for i, src in enumerate(sources.values()):
@@ -297,11 +297,25 @@ def main():
 
     with open(DATASET.root / 'bug_commit.json', 'rb') as file:
         bug_commits = json.load(file)
-    # with open(DATASET.root / 'AspectJ_process_clean.csv', 'rb') as file:
-    process_clean = pd.read_csv(r'../data/sourceFile_aspectj/AspectJ_process_clean.csv')
-    # print(len(src_files))
+    # print(x)
+    for src in src_files.values():
+        docs_source_ = {}
+        data = src.file_name['stemmed']  + src.attributes['stemmed'] +  src.method_names['stemmed'] + src.comments['stemmed']
+        for word in data:
+            if word in docs_source_.keys():
+                docs_source_[word] += 1
+            else:
+                docs_source_[word] = 1
+        d3 = {}
+        for word in src.method_names_hub:
+            if word in d3.keys():
+                d3[word] += 1
+            else:
+                d3[word] = 1
+        src.all_content = docs_source_
+        src.id = d3
     tf = TFIDFVectorizer()
-    xy, output =  tf.compute_tfidf_summary(bug_reports, src_files, bug_commits, process_clean)
+    xy, output =  tf.compute_tfidf_summary(bug_reports, src_files, bug_commits)
     with open(DATASET.root / 'tfidf_test.json', 'w') as file:
         json.dump(xy, file)
     
