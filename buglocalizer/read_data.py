@@ -67,9 +67,6 @@ class TFIDFVectorizer():
 
     def compute_tfidf_summary(self, bug_reports, sources, bug_commits):
         
-        print(bug_commits[0][0])
-        print(bug_commits[1][0])
-        print(bug_commits[455][0])
         # print(len(bug_commits))
         # print(len(bug_commits[6]))
         # print(len(sources))
@@ -115,7 +112,7 @@ class TFIDFVectorizer():
                 #         d3[word] += 1
                 #     else:
                 #         d3[word] = 1
-                docs_method.append(src.id)
+                # docs_method.append(src.id)
             print(len(docs_source)) # 940
             print(len(vocab)) # 3410
             x_tfidf = []
@@ -144,21 +141,21 @@ class TFIDFVectorizer():
                         row.append(0)
                 y_tfidf.append(row)
             print("y_tfidf", len(y_tfidf))
-            s3 = []
-            for doc in docs_method:
-                for word in doc:
-                    doc[word] = self.tfidf(word, doc, docs_method)
-                row = []
-                for f in vocab:
-                    if f in doc.keys():
-                        row.append(doc[word])
-                    else:
-                        row.append(0)
-                s3.append(row)
+            # s3 = []
+            # for doc in docs_method:
+            #     for word in doc:
+            #         doc[word] = self.tfidf(word, doc, docs_method)
+            #     row = []
+            #     for f in vocab:
+            #         if f in doc.keys():
+            #             row.append(doc[word])
+            #         else:
+            #             row.append(0)
+            #     s3.append(row)
             
-            data = self.cosine_sim(x_tfidf, y_tfidf, s3)
+            data = self.cosine_sim(x_tfidf, y_tfidf)
             output.append(data)
-            output_tfidf.append([x_tfidf, y_tfidf, s3])
+            output_tfidf.append([x_tfidf, y_tfidf])
             # with open(DATASET.root / i /'x_tfidf.json'), 'w') as file:
             #     json.dump([x_tfidf, y_tfidf, s3], file)
         return output_tfidf, output
@@ -245,11 +242,11 @@ class TFIDFVectorizer():
 
         # return x_tfidf, y_tfidf, s3
     
-    def cosine_sim(self, x_tfidf, y_tfidf, s3):
+    def cosine_sim(self, x_tfidf, y_tfidf):
         n = len(x_tfidf)
         m = len(y_tfidf)
         size = len(x_tfidf[n-1])
-        s3 = np.asarray(s3)
+        # s3 = np.asarray(s3)
         x_tfidf = np.asarray(x_tfidf)
         y_tfidf = np.asarray(y_tfidf)
         x_similarity = []
@@ -258,7 +255,8 @@ class TFIDFVectorizer():
             array_i = []
             __x = x_tfidf[i].reshape(1, size)
             for j in range(m):
-                t = max(cosine_similarity(__x, y_tfidf[j].reshape(1, size))[0][0], cosine_similarity(__x, s3[j].reshape(1, size))[0][0])
+                # t = max(cosine_similarity(__x, y_tfidf[j].reshape(1, size))[0][0], cosine_similarity(__x, s3[j].reshape(1, size))[0][0])
+                t = cosine_similarity(__x, y_tfidf[j].reshape(1, size))[0][0]
                 array_i.append(t)
             x_similarity.append(array_i)
         return x_similarity
