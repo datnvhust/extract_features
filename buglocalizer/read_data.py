@@ -75,6 +75,7 @@ class TFIDFVectorizer():
         output = []
         output_tfidf = []
         for i, report in enumerate(bug_reports.values()):
+            # if i == 5:
             print(i)
             vocab = []
             docs_report = []
@@ -96,6 +97,9 @@ class TFIDFVectorizer():
             for j, bug_commit in enumerate(bug_commits[i]):
                 path = bug_commit[0].replace('/', '\\')
                 src = sources[path]
+                # if j == 0:
+                #     print(src.method_names_hub)
+                #     print(src.method_names)
                 # docs_source_ = {}
                 data = src.file_name['stemmed']  + src.attributes['stemmed'] +  src.method_names['stemmed'] + src.comments['stemmed']
                 for word in data:
@@ -156,8 +160,9 @@ class TFIDFVectorizer():
             data = self.cosine_sim(x_tfidf, y_tfidf)
             output.append(data)
             output_tfidf.append([x_tfidf, y_tfidf])
-            # with open(DATASET.root / i /'x_tfidf.json'), 'w') as file:
-            #     json.dump([x_tfidf, y_tfidf, s3], file)
+                # name ='x_tfidf_' + str(i) + '.json'
+                # with open(DATASET.root / name, 'w') as file:
+                #     json.dump([x_tfidf, y_tfidf], file)
         return output_tfidf, output
         # print((sources['ajbrowser\\src\\org\\aspectj\\tools\\ajbrowser\\85a827a BrowserProperties.java'].id))
         # for i, src in enumerate(sources.values()):
@@ -295,6 +300,7 @@ def main():
 
     with open(DATASET.root / 'bug_commit.json', 'rb') as file:
         bug_commits = json.load(file)
+    print(len(bug_reports))
     # print(x)
     for src in src_files.values():
         docs_source_ = {}
