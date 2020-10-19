@@ -398,6 +398,7 @@ def main():
     src_prep = SrcPreprocessing(parser.src_parser_bug())
     src_prep.preprocess()
     print(len(src_prep.src_files))
+    # last_commit: 1148 (kể cả không đúng cú pháp)
     with open(DATASET.root / 'preprocessed_src.pickle', 'wb') as file:
         # for src in src_prep.src_files.values():
         #     print(src.method_names_hub)
@@ -406,6 +407,7 @@ def main():
     report_prep = ReportPreprocessing(parser.report_parser())
     report_prep.preprocess()
     print(len(report_prep.bug_reports))
+    # number bug: 587
     with open(DATASET.root / 'preprocessed_reports.pickle', 'wb') as file:
         # print(report_prep.bug_reports)
         # for bug in report_prep.bug_reports.values():
