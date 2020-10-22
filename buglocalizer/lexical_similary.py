@@ -10,7 +10,7 @@ from assets import stop_words, java_keywords
 import re
 import string
 import inflection
-from tfidf import TFIDFVectorizer
+from tfidf_vsm import TFIDFVectorizer
 
 class LexicalSimilary():
     def _split_camelcase(self, tokens):
@@ -71,8 +71,11 @@ class LexicalSimilary():
             #                     if token not in stop_words]
             # src.method_names_hub = [token for token in src.method_names_hub
             #                     if token not in java_keywords]
-            print(src.exact_file_name ,src.method_names_hub)
+            print(src.exact_file_name)
             d3 = {}
+            for method in src.method_names_hub:
+                print(method)
+            break
             # for method in src.method_names_hub:
             #     src.method_names_hub = self._split_camelcase(src.method_names_hub)
             #     methodnames_punctnum_rem = [token.translate(punctnum_table)
@@ -95,44 +98,44 @@ class LexicalSimilary():
             # # print(vocab)
             # docs_method.append(d3)
 
-        # x_tfidf = []
-        # for doc in docs_report:
+        x_tfidf = []
+        for doc in docs_report:
+            for word in doc:
+                doc[word] = tfidf.tfidf(word, doc, docs_report)
+            row = []
+            for f in vocab:
+                if f in doc.keys():
+                    row.append(doc[word])
+                else:
+                    row.append(0)
+            x_tfidf.append(row)
+        print("x_tfidf")
+        y_tfidf = []
+        for doc in docs_source:
+            for word in doc:
+                doc[word] = tfidf.tfidf(word, doc, docs_source)
+            row = []
+            for f in vocab:
+                if f in doc.keys():
+                    row.append(doc[word])
+                else:
+                    row.append(0)
+            y_tfidf.append(row)
+        print("y_tfidf")
+
+        s3 = []
+        # for doc in docs_method:
         #     for word in doc:
-        #         doc[word] = tfidf.tfidf(word, doc, docs_report)
+        #         doc[word] = self.tfidf(word, doc, docs_method)
         #     row = []
         #     for f in vocab:
         #         if f in doc.keys():
         #             row.append(doc[word])
         #         else:
         #             row.append(0)
-        #     x_tfidf.append(row)
-        # print("x_tfidf")
-        # y_tfidf = []
-        # for doc in docs_source:
-        #     for word in doc:
-        #         doc[word] = tfidf.tfidf(word, doc, docs_source)
-        #     row = []
-        #     for f in vocab:
-        #         if f in doc.keys():
-        #             row.append(doc[word])
-        #         else:
-        #             row.append(0)
-        #     y_tfidf.append(row)
-        # print("y_tfidf")
+        #     s3.append(row)
 
-        # s3 = []
-        # # for doc in docs_method:
-        # #     for word in doc:
-        # #         doc[word] = self.tfidf(word, doc, docs_method)
-        # #     row = []
-        # #     for f in vocab:
-        # #         if f in doc.keys():
-        # #             row.append(doc[word])
-        # #         else:
-        # #             row.append(0)
-        # #     s3.append(row)
-
-        # return x_tfidf, y_tfidf, s3
+        return x_tfidf, y_tfidf, s3
     
     def compute_similarity(self, x_tfidf, y_tfidf, s3):
         """
@@ -168,8 +171,9 @@ def main():
         bug_reports = pickle.load(file)
     print(len(src_files))
     tf = LexicalSimilary()
-    tf.compute_tfidf_summary(bug_reports, src_files)
-    # x, y, s3 = tf.compute_tfidf_summary(bug_reports, src_files)
+    # tf.compute_tfidf_summary(bug_reports, src_files)
+    x, y, s3 = tf.compute_tfidf_summary(bug_reports, src_files)
+    # text_structure = tf.compute_similarity(x, y, s3)
     # print(len(x))
     # print(len(y))
     # with open(DATASET.root / 'x_tfidf.json', 'w') as file:
@@ -187,8 +191,7 @@ def main():
     # # with open(DATASET.root / 's3.json', 'rb') as file:
     # #     s3 = json.load(file)
     # # tf = TFIDFVectorizer()
-    # text_structure = tf.compute_similarity(x, y, s3)
-    # # print(text_structure)
+    # print(text_structure)
 
     # # output = []
     # # min_score = np.min(text_structure)
@@ -201,7 +204,7 @@ def main():
     # #     output.append(scores)
     # # print(output)
     # # numpyData = {"data": output}
-    # with open(DATASET.root / 'features1_update.json', 'w') as file:
+    # with open(DATASET.root / 'features1_update_croft.json', 'w') as file:
     #     json.dump(text_structure, file)
     
 

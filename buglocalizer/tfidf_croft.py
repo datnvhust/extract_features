@@ -1,5 +1,5 @@
 from math import log
-class TFIDFVectorizer_croft():
+class TFIDFVectorizer():
     def tf(self,word,doc, doc_list):
         return log(doc[word]) + 1
 
@@ -22,7 +22,7 @@ if __name__=='__main__':
     doc4={'mik4':8,'cd':3,'arbit':2,'da':1,'fork':1}
     doc_list=[doc1,doc2,doc3,doc4]
     # doc_list=[doc1]
-    tfidf = TFIDFVectorizer_croft()
+    tfidf = TFIDFVectorizer()
     for doc in doc_list:
         for word in doc:
             print( word,tfidf.tfidf(word,doc,doc_list))
