@@ -32,7 +32,7 @@ aspectj = Dataset(
     'aspectj',
     _DATASET_ROOT / 'sourceFile_aspectj',
     _DATASET_ROOT / 'sourceFile_aspectj/org.aspectj',
-    _DATASET_ROOT / 'sourceFile_aspectj/AspectJ_v2.xml'
+    _DATASET_ROOT / 'sourceFile_aspectj/AspectJ_no_test.xml'
 )
 eclipseui = Dataset(
     'eclipseui',

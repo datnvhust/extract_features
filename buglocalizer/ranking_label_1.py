@@ -36,7 +36,7 @@ def main_normal():
                 count = count + 1
             x.append(ranking[i].index(source))
         out.append(x)
-    print(count)
+    print(count) # 43/535 no tests , 71/587 all
     with open(DATASET.root / 'ranking_label_normal.json', 'w') as file:
         json.dump(out, file)
 
