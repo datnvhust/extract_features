@@ -16,7 +16,9 @@ class TFIDFVectorizer():
         all_num=len(doc_list)
         word_count=0
         for doc in doc_list:
+            print(doc)
             if word in doc:
+                print(word)
                 word_count+=1
         return log((all_num+1)/(word_count+0.5))
 
@@ -29,11 +31,12 @@ if __name__=='__main__':
     doc2={'mik2':21,'ab':11,'web':14,'chal':5}
     doc3={'mik3':126,'bc':116,'web':74,'lelo':12,'foot':1}
     doc4={'mik4':8,'cd':3,'arbit':2,'da':1,'fork':1}
-    doc_list=[doc1,doc2,doc3,doc4]
-    tfidf = TFIDFVectorizer()
-    for doc in doc_list:
-        for word in doc:
-            print( word,tfidf.tfidf(word,doc,doc_list))
+    print(sum(doc1.values()))
+    # doc_list=[doc1,doc2,doc3,doc4]
+    # tfidf = TFIDFVectorizer()
+    # for doc in doc_list:
+    #     for word in doc:
+    #         print( word,tfidf.tfidf(word,doc,doc_list))
 import pandas as pd 
 
 
