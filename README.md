@@ -17,3 +17,15 @@
     python main.py
     ```
     All the modules are also independently runnable if it was needed to run them one by one.
+
+## Install
+- Check version bug report in datasets.py
+- cd buglocalizer/
+- python .\preprocessing.py
+- python .\dump.py
+- python .\label.py
+- python .\module1.py
+- python .\module2.py
+- python .\module3.py
+- python .\ranking.py
+- python .\ranking_label_1.py

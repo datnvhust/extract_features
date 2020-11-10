@@ -195,6 +195,7 @@ def main():
         src_files = pickle.load(file)
     with open(DATASET.root / 'preprocessed_reports.pickle', 'rb') as file:
         bug_reports = pickle.load(file)
+    print(len(bug_reports))
     # sim = getVocab(src_files, bug_reports)
     sim = result_normal()
 
