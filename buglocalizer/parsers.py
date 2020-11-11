@@ -219,29 +219,29 @@ class Parser:
                 else:
                     package_name = None
 
-                if self.name == 'aspectj':
-                    src_files[os.path.relpath(src_file, start=self.src)] = SourceFile(
-                        src, comments, comments_hub, class_names, class_names_hub, attributes, attributes_hub,
-                        method_names, method_names_hub, variables, variables_hub,
-                        [os.path.basename(src_file).split('.')[0]],
-                        package_name, class_imports,
-                        os.path.relpath(src_file, start=self.src)
-                    )
-                else:
-                    # If source file has package declaration
-                    if package_name:
-                        src_id = (package_name + '.' +
-                                  os.path.basename(src_file))
-                    else:
-                        src_id = os.path.basename(src_file)
+                # if self.name == 'aspectj':
+                src_files[os.path.relpath(src_file, start=self.src)] = SourceFile(
+                    src, comments, comments_hub, class_names, class_names_hub, attributes, attributes_hub,
+                    method_names, method_names_hub, variables, variables_hub,
+                    [os.path.basename(src_file).split('.')[0]],
+                    package_name, class_imports,
+                    os.path.relpath(src_file, start=self.src)
+                )
+                # else:
+                #     # If source file has package declaration
+                #     if package_name:
+                #         src_id = (package_name + '.' +
+                #                   os.path.basename(src_file))
+                #     else:
+                #         src_id = os.path.basename(src_file)
 
-                    src_files[src_id] = SourceFile(
-                        src, comments, comments_hub, class_names, class_names_hub, attributes, attributes_hub,
-                        method_names, method_names_hub, variables, variables_hub,
-                        [os.path.basename(src_file).split('.')[0]],
-                        package_name, class_imports,
-                        src_id
-                    )
+                #     src_files[src_id] = SourceFile(
+                #         src, comments, comments_hub, class_names, class_names_hub, attributes, attributes_hub,
+                #         method_names, method_names_hub, variables, variables_hub,
+                #         [os.path.basename(src_file).split('.')[0]],
+                #         package_name, class_imports,
+                #         src_id
+                #     )
         return src_files
 
     def src_parser(self):
@@ -334,29 +334,29 @@ class Parser:
             else:
                 package_name = None
 
-            if self.name == 'aspectj':
-                src_files[os.path.relpath(src_file, start=self.src)] = SourceFile(
-                    src, comments, comments_hub, class_names, class_names_hub, attributes, attributes_hub,
-                    method_names, method_names_hub, variables, variables_hub,
-                    [os.path.basename(src_file).split('.')[0]],
-                    package_name, class_imports,
-                    os.path.relpath(src_file, start=self.src)
-                )
-            else:
-                # If source file has package declaration
-                if package_name:
-                    src_id = (package_name + '.' +
-                              os.path.basename(src_file))
-                else:
-                    src_id = os.path.basename(src_file)
+            # if self.name == 'aspectj':
+            src_files[os.path.relpath(src_file, start=self.src)] = SourceFile(
+                src, comments, comments_hub, class_names, class_names_hub, attributes, attributes_hub,
+                method_names, method_names_hub, variables, variables_hub,
+                [os.path.basename(src_file).split('.')[0]],
+                package_name, class_imports,
+                os.path.relpath(src_file, start=self.src)
+            )
+            # else:
+            #     # If source file has package declaration
+            #     if package_name:
+            #         src_id = (package_name + '.' +
+            #                   os.path.basename(src_file))
+            #     else:
+            #         src_id = os.path.basename(src_file)
 
-                src_files[src_id] = SourceFile(
-                    src, comments, comments_hub, class_names, class_names_hub, attributes, attributes_hub,
-                    method_names, method_names_hub, variables, variables_hub,
-                    [os.path.basename(src_file).split('.')[0]],
-                    package_name, class_imports,
-                    src_id
-                )
+            #     src_files[src_id] = SourceFile(
+            #         src, comments, comments_hub, class_names, class_names_hub, attributes, attributes_hub,
+            #         method_names, method_names_hub, variables, variables_hub,
+            #         [os.path.basename(src_file).split('.')[0]],
+            #         package_name, class_imports,
+            #         src_id
+            #     )
         return src_files
 
 
