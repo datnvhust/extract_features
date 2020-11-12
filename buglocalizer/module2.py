@@ -196,16 +196,16 @@ def main():
     with open(DATASET.root / 'preprocessed_reports.pickle', 'rb') as file:
         bug_reports = pickle.load(file)
     print(len(bug_reports))
-    # getVocab(src_files, bug_reports)
+    getVocab(src_files, bug_reports)
     sim_normal = result_normal()
 
     with open(DATASET.root / 'module2_normal.json', 'w') as file:
         json.dump(sim_normal, file)
 
-    # sim = result()
+    sim = result()
 
-    # with open(DATASET.root / 'module2.json', 'w') as file:
-    #     json.dump(sim, file)
+    with open(DATASET.root / 'module2.json', 'w') as file:
+        json.dump(sim, file)
 
 
 if __name__ == '__main__':
