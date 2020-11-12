@@ -12,7 +12,7 @@ def main(alpha):
         x = []
         m2 = module2[i]
         for j, source in enumerate(bug):
-            x.append(source * alpha + ( 1 - alpha ) * m2[j])
+            x.append(source *(1 - alpha) + ( alpha ) * m2[j])
         output.append(x)
     
     file_name = 'module3_' + str(alpha) + '.json'
@@ -30,7 +30,7 @@ def main_normal(alpha):
         x = []
         m2 = module2[i]
         for j, source in enumerate(bug):
-            x.append(source * alpha + ( 1 - alpha ) * m2[j])
+            x.append(source *(1 - alpha) + ( alpha ) * m2[j])
         output.append(x)
     file_name = 'module3_normal_' + str(alpha) + '.json'
     with open(DATASET.root / file_name, 'w') as file:

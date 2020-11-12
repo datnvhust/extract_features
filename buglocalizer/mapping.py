@@ -1,26 +1,26 @@
-import preprocessing
-import dump
-import label
-import module1
-import module2
+# import preprocessing
+# import dump
+# import label
+# import module1
+# import module2
 import module3
 import ranking
 import ranking_label_1
 
-print("Preprocessing...")
-preprocessing.main()
+# print("Preprocessing...")
+# preprocessing.main()
 
 # print("Dump...")
 # dump.main()
 
-print("Label...")
-label.load()
+# print("Label...")
+# label.load()
 
-print("Module1...")
-module1.main()
+# print("Module1...")
+# module1.main()
 
-print("Module2...")
-module2.main()
+# print("Module2...")
+# module2.main()
 
 print("Module3...")
 module3.load()
