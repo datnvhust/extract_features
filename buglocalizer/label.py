@@ -79,7 +79,9 @@ def main_v2():
     results = label_v2(bug_reports, src_process)
     with open(DATASET.root / 'label.json', 'w') as file:
         json.dump(results, file)
-
+def load():
+    main()
+    main_v2()
 if __name__ == '__main__':
     main()
     main_v2()

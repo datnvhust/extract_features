@@ -29,6 +29,9 @@ for bug in bug_reports.values():
 
 data_source_reports = []
 for src in src_files.values():
+    print(src.exact_file_name)
+    print(src.file_name)
+    print(src.class_names)
     data_source_reports.append(
         src.id.replace("\\", "/")
     )

@@ -13,7 +13,7 @@ class BugReport:
     """Class representing each bug report"""
 
     __slots__ = ['summary', 'description', 'fixed_files', 'opendate', 'fixdate', 'commit', 'status',
-                 'pos_tagged_summary', 'pos_tagged_description', 'stack_traces', 'id']
+                 'pos_tagged_summary', 'pos_tagged_description', 'stack_traces', 'id', 'check']
 
     def __init__(self, summary, description, fixed_files, opendate, fixdate, commit, status, bug_id):
         self.summary = summary
@@ -27,7 +27,7 @@ class BugReport:
         self.pos_tagged_description = None
         self.stack_traces = None
         self.id = bug_id
-
+        self.check = True
 
 class SourceFile:
     """Class representing each source file"""
